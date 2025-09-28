@@ -1,0 +1,245 @@
+/* Mulish Regular
+Oswald Regular
+Oswald Light
+Mulish Italic
+Mulish Medium
+Mulish Bold */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* ///////////////////////// */
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+  font-family: Mulish;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a {
+  font-style: normal;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-family: Oswald;
+}
+
+a {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.section {
+  padding-top: 75px;
+  padding-bottom: 3px;
+}
+
+.section--dark {
+  background: #030303;
+  color: #FFF;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+
+.section--dark {
+  background: #222;
+  color: #FFF;
+}
+
+/* //////////////////////////////// */
+.header__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__list {
+  margin-right: 42px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.header__burger {
+  display: none;
+}
+
+/* ................................ */
+.hero {
+  padding-bottom: 58px; 
+}
+
+/* */
+.hero__container {
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 100%; */
+  gap: 62px;
+}
+/* @media (max-width: 768px) {
+  .hero__container {
+    flex-wrap:;
+  }
+} */
+
+/* Сайдбар с вертикальным текстом */
+.hero__column1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Вертикальный текст*/
+.hero__column1>span:first-child,
+.hero__column1>span:last-child {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  font-family: Mulish;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  align-items: center;
+}
+
+.vertical-line {
+  width: 1px;
+  height: 535px;
+  background-color: #fff;
+  margin-bottom: 14px;
+  margin-top: 12px;
+}
+
+
+/* Основной контент справа */
+.hero__column2 {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 99px;
+}
+.hero__made-by-me-numbers{
+  margin-right: 64px;
+}
+.hero__made-by-me-numbers-blocks{
+  display: flex;
+}
+.hero__made-by-me-numbers p:first-child {
+font-style: normal;
+font-weight: 300;
+text-align: left;
+font-family: Oswald;
+font-size: 48px;
+line-height: 54px;
+text-transform: uppercase;
+}
+.hero__made-by-me-numbers p:last-child {
+  text-align: center;
+margin-left: 24px;
+margin-top: 8px;
+font-family: Mulish;
+font-size: 16px;
+font-weight: 400;
+line-height: 24px;
+}
+/* Заголовок */
+.hero__title {
+  font-size: 116px;
+font-weight: 300;
+line-height: 132px;
+  text-transform: uppercase;
+}
+.hero__subtitle {
+  font-family: Oswald;
+font-size: 20px;
+font-style: normal;
+font-weight: 400;
+line-height: 28px;
+text-transform: uppercase;
+}
+
+/* Кнопка  Scroll down */
+.hero__scroll-down-text {
+font-size: 16px;
+line-height: 24px;
+margin-top: 120px;
+}
+.hero__scroll-down-svg {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.hero__column3 {
+      margin-left: 5px;
+  /* margin-right: auto; */
+}
+@media (max-width: 1000px) {
+  .hero__column3 {
+    display: none;
+  }
+}
+.hero__photo1 {
+  margin-top: 260px;
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  object-position: bottom;
+}
+.hero__photo2 {
+  width: 280px;
+}
+
+/* Текст внизу справа */
+.hero__right-text {
+  margin-top: 297px;
+text-align: right;
+font-size: 16px;
+line-height: 24px;
+  /* align-self: flex-end; */
+}
