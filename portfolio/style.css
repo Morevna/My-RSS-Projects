@@ -68,8 +68,8 @@ a {
 }
 
 .section {
-  padding-top: 75px;
-  padding-bottom: 3px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .section--dark {
@@ -95,6 +95,11 @@ img {
 }
 
 /* //////////////////////////////// */
+.header {
+    padding-top: 72px;
+    padding-bottom: 3px;
+    padding-right: 3px;
+}
 .header__container {
   display: flex;
   justify-content: space-between;
@@ -113,14 +118,15 @@ img {
 
 /* ................................ */
 .hero {
-  padding-bottom: 58px; 
+  padding-bottom: 59px; 
+  padding-top: 75px;
 }
 
 /* */
 .hero__container {
   display: flex;
   flex-wrap: wrap;
-  /* width: 100%; */
+  width: 100%;
   gap: 62px;
 }
 /* @media (max-width: 768px) {
@@ -216,7 +222,7 @@ margin-top: 120px;
   vertical-align: middle;
 }
 .hero__column3 {
-      margin-left: 5px;
+      margin-left: 6px;
   /* margin-right: auto; */
 }
 @media (max-width: 1000px) {
@@ -229,7 +235,6 @@ margin-top: 120px;
   width: 220px;
   height: 220px;
   object-fit: cover;
-  object-position: bottom;
 }
 .hero__photo2 {
   width: 280px;
@@ -242,4 +247,52 @@ text-align: right;
 font-size: 16px;
 line-height: 24px;
   /* align-self: flex-end; */
+}
+/* ///////////////////////////////// about me*/
+.about {
+   margin-left: auto;
+   margin-right: 5px;
+   padding-top: 60px;
+   padding-bottom: 20px;
+}
+.about__container {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+width: 100%; 
+  gap: 40px; 
+}
+.about__column1, .about__column2, .about__column3 {
+  flex: 1 1 440px;
+  max-width: 440px; 
+}
+@media (max-width: 768px) {
+  .about__column1,
+  .about__column2,
+  .about__column3 {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+.about__photo {
+  height: 440px;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 40px;
+  /* margin-top: 80px; */
+  /* object-position: bottom; */
+}
+.about__title { 
+margin-bottom: 12px;
+font-size: 32px;
+line-height: 40px; 
+text-transform: uppercase;
+}
+.about__text {
+  margin-bottom: 40px;
+  font-family: Mulish;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
 }
