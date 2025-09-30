@@ -301,10 +301,16 @@ img {
 }
 
 /* Scroll down */
-.hero__scroll-down-text {
-  font-size: 16px;
+button.hero__scroll-down-text {
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  display: block;
+  cursor: pointer; 
+   font-size: 16px;
   line-height: 24px;
   margin-top: 120px;
+  color: #FFF;
 }
 
 
@@ -324,16 +330,21 @@ img {
     display: none;
   }
 }
+.hero__scroll-down-text:hover,
+.hero__scroll-down-text:hover .hero__scroll-down-svg {
+  color: #FF3C3C;
+}
 
 .hero__scroll-down-svg {
-  margin-left: 2px;
+  margin-left: 6px;
   vertical-align: middle;
 }
 
 
 .hero__column3 {
-  margin-left: 6px;
-  /* margin-right: auto; */
+   transform: translateX(22px);
+ margin-left: 0px;
+  padding-left: 8px;
 }
 
 @media (max-width: 1000px) {
