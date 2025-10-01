@@ -100,23 +100,27 @@ img {
   padding-bottom: 3px;
   padding-right: 3px;
 }
+
 @media (max-width: 380px) {
-.header {
+  .header {
     /* padding-top: 72px; */
     padding-bottom: 0px;
-     margin-bottom: 0px;
+    margin-bottom: 0px;
   }
+
   .hero {
     margin-top: 0px;
     padding-top: 0px;
     padding-bottom: 59px;
   }
-  .hero__container{
+
+  .hero__container {
     margin-top: 0px;
     padding-top: 0px;
     padding-bottom: 59px;
   }
 }
+
 @media (max-width: 768px) {
   .header {
     /* padding-top: 72px;
@@ -129,7 +133,6 @@ img {
     padding-bottom: 59px;
   }
 }
-
 
 .header__container {
   display: flex;
@@ -167,7 +170,7 @@ img {
   height: 2px;
   background-color: white;
   border-radius: 2px;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 
 .header__burger span:first-child {
@@ -188,6 +191,75 @@ img {
   .header__list {
     display: none;
   }
+}
+
+/* ==================== */
+html.no-scroll {
+  overflow: hidden;
+}
+.burger-menu {
+  position: fixed;
+  top: 160px;
+  right: -100%;
+  width: 100%;
+  height: calc(100vh - 160px);
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: right 0.5s ease-in-out;
+  z-index: 1000;
+}
+.burger-menu.open {
+  right: 0;
+}
+
+@media (min-width: 768px) {
+  .burger-menu,
+  .header__burger {
+    display: none !important;
+  }
+
+  .header__list {
+    display: flex !important;
+  }
+}
+
+/* Список */
+.burger-menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.burger-menu__link {
+  color: #FFF;
+  /* text-align: center; */
+  font-family: Oswald;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.burger-menu__link:hover {
+  color: #FF3C3C;
+}
+
+/*крестик*/
+.header__burger.active span:first-child {
+  transform: rotate(45deg);
+  position: absolute;
+  top: 80px;
+  width: 20px;
+}
+.header__burger.active span:last-child {
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 80px;
 }
 
 /* ................................ */
@@ -305,13 +377,14 @@ img {
 
 @media (max-width: 768px) {
   .hero__title {
-color: #FFF;
-font-family: Oswald;
-font-size: 68px;
-font-style: normal;
-font-weight: 300;
-line-height: 80px; /* 117.647% */
-text-transform: uppercase;
+    color: #FFF;
+    font-family: Oswald;
+    font-size: 68px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 80px;
+    /* 117.647% */
+    text-transform: uppercase;
   }
 }
 
@@ -330,8 +403,8 @@ button.hero__scroll-down-text {
   margin: 0;
   text-align: left;
   display: block;
-  cursor: pointer; 
-   font-size: 16px;
+  cursor: pointer;
+  font-size: 16px;
   line-height: 24px;
   margin-top: 120px;
   color: #FFF;
@@ -354,6 +427,7 @@ button.hero__scroll-down-text {
     display: none;
   }
 }
+
 .hero__scroll-down-text:hover,
 .hero__scroll-down-text:hover .hero__scroll-down-svg {
   color: #FF3C3C;
@@ -366,8 +440,8 @@ button.hero__scroll-down-text {
 
 
 .hero__column3 {
-   transform: translateX(20px);
- margin-left: 0px;
+  transform: translateX(20px);
+  margin-left: 0px;
   padding-left: 8px;
 }
 
@@ -396,10 +470,11 @@ button.hero__scroll-down-text {
   line-height: 24px;
   /* align-self: flex-end; */
 }
+
 @media (max-width: 768px) {
   .hero__right-text {
     /* margin-top: 0px; */
-transform: translateY(-23px);
+    transform: translateY(-23px);
   }
 }
 
@@ -480,10 +555,11 @@ transform: translateY(-23px);
     display: none;
   }
 }
+
 @media (max-width: 380px) {
   .about__photo {
-      width: 100%;
-  object-fit: cover;
+    width: 100%;
+    object-fit: cover;
     max-height: 340px;
     max-width: 340px;
     object-fit: cover;
@@ -508,14 +584,16 @@ transform: translateY(-23px);
   font-weight: 400;
   line-height: 24px;
 }
+
 @media (max-width: 768px) {
- .about__text {
-  margin-bottom: 31px;
+  .about__text {
+    margin-bottom: 31px;
   }
 }
+
 @media (max-width: 380px) {
- .about__text {
-  max-width: 340px;
+  .about__text {
+    max-width: 340px;
   }
 }
 
@@ -915,8 +993,8 @@ transform: translateY(-23px);
 
 @media (max-width: 380px) {
   .footer__container {
-display: flex;
-flex-direction: column;
-gap: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
   }
 }
