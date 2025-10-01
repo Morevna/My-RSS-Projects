@@ -19,3 +19,19 @@ links.forEach(link => {
   });
 });
 ///////////////////////////////////////////////////////////////
+
+const slider = document.querySelector('.portfolio__slider');
+const leftZone = document.querySelector('.scroll-zone--left');
+const rightZone = document.querySelector('.scroll-zone--right');
+
+window.addEventListener('load', () => {
+  centerSlider();
+});
+
+function centerSlider() {
+  const sliderWrapper = document.querySelector('.portfolio__slider-wrapper');
+  const sliderWidth = slider.scrollWidth;
+  const wrapperWidth = sliderWrapper.clientWidth;
+  const centerScroll = (sliderWidth - wrapperWidth) / 2;
+  slider.scrollLeft = centerScroll;
+}

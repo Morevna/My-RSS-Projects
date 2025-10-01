@@ -203,14 +203,17 @@ html.no-scroll {
   right: -100%;
   width: 100%;
   height: calc(100vh - 160px);
-  background-color: #000;
+  background: #222;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   transition: right 0.5s ease-in-out;
   z-index: 1000;
+  
 }
 .burger-menu.open {
+ /* overflow: auto; */
   right: 0;
 }
 
@@ -227,12 +230,15 @@ html.no-scroll {
 
 /* Список */
 .burger-menu__list {
+   transform: translateX(-20px);
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 35px;
   text-align: center;
+  justify-content: center;
   padding: 0;
   margin: 0;
+  margin-top: 188px;
 }
 
 .burger-menu__link {
@@ -253,13 +259,15 @@ html.no-scroll {
 .header__burger.active span:first-child {
   transform: rotate(45deg);
   position: absolute;
-  top: 80px;
+  top: 81px;
   width: 20px;
+  right: 38px;
 }
 .header__burger.active span:last-child {
   transform: rotate(-45deg);
   position: absolute;
-  top: 80px;
+  top: 81px;
+  right: 38px;
 }
 
 /* ................................ */
@@ -638,14 +646,16 @@ all: unset;
 }
 
 .portfolio__slider {
-  margin-left: -135px;
+  /* margin-left: -135px; */
+  /* overflow-x: auto; */
   /* padding-right: 5px; */
-  transform: translateX(-124px);
+  /* transform: translateX(-124px); */
   display: flex;
   gap: 20px;
   padding-top: 40px;
-  /* scroll-snap-type: x mandatory;
-  overflow-x: scroll; */
+  overflow-x: scroll;
+  overflow-y: hidden;
+  /* scroll-snap-type: x mandatory;*/
   /* scroll-behavior: smooth; */
 }
 
@@ -679,21 +689,23 @@ all: unset;
 }
 
 /* ////// */
-/* .scroll-zone {
+.scroll-zone {
   position: absolute;
   top: 0;
-  width: 30vw;
   height: 100%;
   z-index: 2;
-} */
+  cursor: pointer;
+  background: rgba(0,0,0,0);
+      width: 30vw;
+}
 
-/* .scroll-zone--left {
+.scroll-zone--left {
   left: 0;
-} */
+}
 
-/* .scroll-zone--right {
+.scroll-zone--right {
   right: 0;
-} */
+}
 
 /* ///////////////////////// */
 .pricing {
