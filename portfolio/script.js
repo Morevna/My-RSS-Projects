@@ -79,7 +79,7 @@ faqItems.forEach(item => {
 
   question.addEventListener('click', () => {
     const isOpen = answer.classList.contains('faq__answer--active');
-      //если вопрос открыт - закрываю
+    //если вопрос открыт - закрываю
     if (isOpen) {
       answer.classList.remove('faq__answer--active');
       toggle.textContent = "+";
@@ -97,15 +97,24 @@ faqItems.forEach(item => {
   });
 });
 //////////////////////////////////////////////////////////////////////////////////
-// Модальное окно открывается при нажатии любой кнопки «ЗАБРОНИРОВАТЬ» на карточках в Packages & Pricingразделе: +6
-// Часть страницы за пределами модального окна затемнена: +4
-// При открытии модального окна вертикальная прокрутка страницы становится неактивной; при закрытии она снова становится активной: +4
-// Нажатие за пределами модального окна и на кнопку закрытия закрывает его: +4
-// Модальное окно центрировано по обеим осям, размеры модальных элементов и их расположение соответствуют дизайну: +4
-
 const priceBtn = document.querySelectorAll('.pricing-card__btn');
- priceBtn.forEach(btn => {
+const modalOverlay = document.querySelector('.pricing__modal-overlay');
+const modalCloseBtn = document.querySelector('.pricing__modal-close-btn');
+priceBtn.forEach(btn => {
   btn.addEventListener('click', () => {
-    
+    html.classList.toggle('no-scroll');
+    modalOverlay.classList.toggle('open');
   })
- })
+});
+
+modalCloseBtn.addEventListener('click', () => {
+  html.classList.remove('no-scroll');
+  modalOverlay.classList.remove('open');
+});
+
+modalOverlay?.addEventListener('click', (event) => {
+  if (event.target === modalOverlay) {
+    html.classList.remove('no-scroll');
+    modalOverlay.classList.remove('open');
+  }
+});

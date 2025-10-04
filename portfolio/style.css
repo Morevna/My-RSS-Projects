@@ -834,7 +834,11 @@ a.hero__scroll-down-text-text {
 }
 
 .pricing__modal-overlay {
-  position: fixed;
+  display: none;
+
+}
+.pricing__modal-overlay.open{
+    position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -859,6 +863,7 @@ a.hero__scroll-down-text-text {
   align-items: center;
   justify-content: center;
   width: 500px;
+  z-index: 1001;
 }
 
 .pricing__modal-close-btn {
