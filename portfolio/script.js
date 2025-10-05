@@ -24,36 +24,6 @@ const slider = document.querySelector('.portfolio__slider');
 const leftZone = document.querySelector('.scroll-zone--left');
 const rightZone = document.querySelector('.scroll-zone--right');
 
-// window.addEventListener('load', () => {
-//   centerSlider();
-// });
-
-// function centerSlider() {
-//   const sliderWrapper = document.querySelector('.portfolio__slider-wrapper');
-//   const sliderWidth = slider.scrollWidth;
-//   const wrapperWidth = sliderWrapper.clientWidth;
-//   const centerScroll = (sliderWidth - wrapperWidth) / 2;
-//   slider.scrollLeft = centerScroll;
-// }
-
-
-// let scrollInterval;
-
-// function startScrolling(direction) {
-//   stopScrolling();
-//   scrollInterval = setInterval(() => {
-//     slider.scrollLeft += direction * 10;
-//   }, 16);
-// }
-
-// function stopScrolling() {
-//   clearInterval(scrollInterval);
-// }
-
-// leftZone.addEventListener('mouseenter', () => startScrolling(-1));
-// rightZone.addEventListener('mouseenter', () => startScrolling(1));
-// leftZone.addEventListener('mouseleave', stopScrolling);
-// rightZone.addEventListener('mouseleave', stopScrolling);
 
 
 
@@ -70,34 +40,85 @@ const rightZone = document.querySelector('.scroll-zone--right');
 
 // Состояние аккордеона сохраняется после перезагрузки страницы: +8
 //    сохранить состояние в localStorage
+
 const faqItems = document.querySelectorAll('.faq__item');
+
+const savedId = localStorage.getItem('openFaqId');
+if (savedId) {
+  const savedItem = document.querySelector(`.faq__item[data-id="${savedId}"]`);
+  if (savedItem) {
+    // Добавляю метку data-open="true"
+    savedItem.setAttribute('data-open', 'true');
+
+    // Открываю ответ
+    const answer = savedItem.querySelector('.faq__answer');
+    answer.classList.add('faq__answer--active');
+    const toggle = savedItem.querySelector('.faq__toggle');
+    toggle.textContent = "−";
+  }
+} else if (faqItems.length > 0) {
+  // Если сохранённого id нет — открываю первый элемент по умолчанию
+  const firstItem = faqItems[0];
+  firstItem.setAttribute('data-open', 'true');
+  const answer = firstItem.querySelector('.faq__answer');
+  answer.classList.add('faq__answer--active');
+  const toggle = firstItem.querySelector('.faq__toggle');
+  toggle.textContent = "−";
+}
+
+// Добавляю этот блок: закрываю все остальные элементы кроме открытого
+faqItems.forEach(item => {
+  // Получаем id открытого элемента (savedId или первый открытый)
+  const openId = savedId || (faqItems.length > 0 ? faqItems[0].dataset.id : null);
+  
+  // Если id элемента не совпадает с открытым — закрываю его
+  if (item.dataset.id !== openId) {
+    const answer = item.querySelector('.faq__answer');
+    const toggle = item.querySelector('.faq__toggle');
+    answer.classList.remove('faq__answer--active');
+    toggle.textContent = "+";
+    item.removeAttribute('data-open');
+  }
+});
+
 
 faqItems.forEach(item => {
   const question = item.querySelector('.faq__question');
   const answer = item.querySelector('.faq__answer');
   const toggle = item.querySelector('.faq__toggle');
+  const id = item.dataset.id;
 
   question.addEventListener('click', () => {
     const isOpen = answer.classList.contains('faq__answer--active');
-    //если вопрос открыт - закрываю
+    //если вопрос открыт - закрываю и удаляю data-id="savedId"
     if (isOpen) {
       answer.classList.remove('faq__answer--active');
       toggle.textContent = "+";
+      item.removeAttribute('data-open');
+      localStorage.removeItem('openFaqId');
     } else {
-      // если был закрыт, то закрываю сначала все другие
+      // если был закрыт, то закрываю сначала все другие и удаляю data-id="savedId"
       faqItems.forEach(otherItem => {
         otherItem.querySelector('.faq__answer').classList.remove('faq__answer--active');
         otherItem.querySelector('.faq__toggle').textContent = "+";
+        otherItem.removeAttribute('data-open');
       });
 
-      // и потом открываю кликнутый вопрос
+      // и потом открываю кликнутый вопрос и добавляю data-id="savedId"
       answer.classList.add('faq__answer--active');
       toggle.textContent = "−";
+      item.setAttribute('data-open', 'true');
+      localStorage.setItem('openFaqId', id);
     }
   });
 });
+
+
 //////////////////////////////////////////////////////////////////////////////////
-const priceBtn = document.querySelectorAll('.pricing-card__btn');
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const priceBtn = document.querySelectorAll('.pricing-card__btn');
 const modalOverlay = document.querySelector('.pricing__modal-overlay');
 const modalCloseBtn = document.querySelector('.pricing__modal-close-btn');
 priceBtn.forEach(btn => {
@@ -117,4 +138,5 @@ modalOverlay?.addEventListener('click', (event) => {
     html.classList.remove('no-scroll');
     modalOverlay.classList.remove('open');
   }
+});
 });
