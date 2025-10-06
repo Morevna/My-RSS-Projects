@@ -40,6 +40,15 @@
         <span></span>
       </button>
     </div>
+    <div class="burger-menu">
+      <ul class="burger-menu__list">
+        <li><a href="#about" class="burger-menu__link">About me</a></li>
+        <li><a href="#portfolio" class="burger-menu__link">Portfolio</a></li>
+        <li><a href="#pricing" class="burger-menu__link">Price</a></li>
+        <li><a href="#faq" class="burger-menu__link">FAQ</a></li>
+        <li><a href="#contact" class="burger-menu__link">Contacts</a></li>
+      </ul>
+    </div>
   </header>
 
   <!-- Hero -->
@@ -64,15 +73,18 @@
         </div>
         <h1 class="hero__title">Professional<br> Photographer</h1>
         <p class="hero__subtitle">Capture the Moment. Tell Your Story.</p>
-        <button class="hero__scroll-down-text">Scroll down
-          <svg class="hero__scroll-down-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none">
-            <path d="M12 5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <path d="M19 12L12 19L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg>
-        </button>
+        <div class="hero__scroll-down-text">
+          <a class="hero__scroll-down-text-text" href="#about">
+            Scroll down
+            <svg class="hero__scroll-down-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+              viewBox="0 0 24 24" fill="none">
+              <path d="M12 5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M19 12L12 19L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
       </div>
       <div class="hero__column3">
         <img class="hero__photo1" src="./image/img-10.png" alt="">
@@ -118,69 +130,73 @@
     <div class="container">
       <h2 class="portfolio__title">My Portfolio</h2>
       <p class="portfolio__text">Every shoot is a story. Here you’ll find portraits, love stories, family sessions, and
-        more.</p>
-      <div class="portfolio__slider-wrapper">
-        <div class="portfolio__slider">
-          <div class="portfolio__slide portfolio__slide--lg" style="--offset: 0px;">
-            <img src="./image/img-20.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--md" style="--offset: 120px;">
-            <img src="./image/img-17.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--sm" style="--offset: 215px;">
-            <img src="./image/img-1.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--md" style="--offset: 0px;">
-            <img src="./image/img-2.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--lg" style="--offset: 120px;">
-            <img src="./image/img-5.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--sm" style="--offset: 215px;">
-            <img src="./image/img-7.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--md">
-            <img src="./image/img-8.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--md">
-            <img src="./image/img-9.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide portfolio__slide--lg">
-            <img src="./image/img-12.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-14.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-21.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-22.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-3.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-4.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-6.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-13.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-15.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-16.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-18.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
-          <div class="portfolio__slide">
-            <img src="./image/img-19.png" alt="Portfolio slide" class="portfolio__slide-img">
-          </div>
+        more.
+      </p>
+    </div>
+
+    <div class="portfolio__slider-wrapper">
+      <div class="scroll-zone scroll-zone--left"></div>
+      <div class="scroll-zone scroll-zone--right"></div>
+      <div class="portfolio__slider">
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 0px;">
+          <img src="./image/img-20.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 120px;">
+          <img src="./image/img-17.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--sm" style="--offset: 215px;">
+          <img src="./image/img-1.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 0px;">
+          <img src="./image/img-2.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 120px;">
+          <img src="./image/img-5.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--sm" style="--offset: 215px;">
+          <img src="./image/img-7.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 0px;">
+          <img src="./image/img-8.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 120px;">
+          <img src="./image/img-9.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 215px;">
+          <img src="./image/img-12.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 0px;">
+          <img src="./image/img-14.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--sm" style="--offset: 120px;">
+          <img src="./image/img-21.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 0px;">
+          <img src="./image/img-22.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 215px;">
+          <img src="./image/img-3.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 0px;">
+          <img src="./image/img-4.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--sm" style="--offset: 120px;">
+          <img src="./image/img-6.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--lg" style="--offset: 215px;">
+          <img src="./image/img-13.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 120px;">
+          <img src="./image/img-15.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--sm" style="--offset: 0px;">
+          <img src="./image/img-16.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 215px;">
+          <img src="./image/img-18.png" alt="Portfolio slide" class="portfolio__slide-img">
+        </div>
+        <div class="portfolio__slide portfolio__slide--md" style="--offset: 120px;">
+          <img src="./image/img-19.png" alt="Portfolio slide" class="portfolio__slide-img">
         </div>
       </div>
     </div>
@@ -264,6 +280,16 @@
           </div>
         </article>
       </div>
+
+      <div class="pricing__modal-overlay">
+        <div class="pricing__modal">
+          <button class="pricing__modal-close-btn" aria-label="modal close btn">&times;</button>
+          <h3>Like my portfolio? Sign up for a shoot!</h3>
+          <input type="text" name="name" placeholder="Your Name" class="contact__input" required>
+          <input type="tel" name="phone" placeholder="+1" class="contact__input" required>
+          <button class="contact__btn">Book now</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -274,8 +300,10 @@
         <h2 class="faq__title">Frequently Asked Questions</h2>
         <p class="faq__text">Everything You Wanted to Ask (and a Bit More)</p>
       </div>
+
+
       <div class="faq__right">
-        <div class="faq__item">
+        <div class="faq__item" data-id="item1">
           <h3 class="faq__question">
             <span class="faq__question-text">How do I book a shoot?</span>
             <button class="faq__toggle" aria-label="Toggle answer">−</button>
@@ -290,53 +318,101 @@
           </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item2">
           <h3 class="faq__question">
             <span class="faq__question-text">Can I choose the location myself?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              Absolutely! If there’s a special place you love or have in mind — I’m happy to shoot there. If you’re
+              unsure, I can suggest beautiful spots with great lighting and atmosphere, tailored to your vision and
+              mood.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item3">
           <h3 class="faq__question">
             <span class="faq__question-text">How long does the shoot take?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              That depends on the package you choose. On average, sessions last from 1 to 4 hours. We’ll plan the pace
+              and type of shoot together — from relaxed city strolls and love stories to more dynamic or editorial
+              sessions.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item4">
           <h3 class="faq__question">
             <span class="faq__question-text">When will I receive the photos?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              You’ll receive your edited photos within 7–14 days. For event and wedding sessions — up to 30 days. I
+              deliver them in a stylish online gallery, where you can download them in full quality or easily share with
+              friends and family.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item5">
           <h3 class="faq__question">
             <span class="faq__question-text">Will you help me pose?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              Definitely! I’ll guide you gently throughout the session — where to look, how to move, how to relax. The
+              goal is to make you feel comfortable and natural. My approach is relaxed, and I’ll never force awkward
+              poses. The result? Real, expressive, and beautiful photos.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item6">
           <h3 class="faq__question">
             <span class="faq__question-text">What should I wear?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              After booking, I’ll send you a style guide with suggestions for colors, textures, and combinations. The
+              most important thing is that you feel confident in your outfit. I’m also happy to help you coordinate
+              looks or plan something cohesive for couples or groups.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item7">
           <h3 class="faq__question">
             <span class="faq__question-text">Do you retouch the photos?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              Yes, all photos are color-corrected and lightly retouched. My editing style is clean and natural — no
+              overdone filters or fake skin. Just you, at your best. Extra retouching is available upon request.
+            </p>
+          </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item" data-id="item8">
           <h3 class="faq__question">
             <span class="faq__question-text">Can I get the raw files?</span>
             <button class="faq__toggle" aria-label="Toggle answer">+</button>
           </h3>
+          <div class="faq__answer">
+            <p>
+              I don’t deliver RAW files. My work includes not only shooting, but also careful selection and editing to
+              create a complete and polished result. You’ll receive only the best images, ready for printing, sharing,
+              or publishing.
+            </p>
+          </div>
         </div>
       </div>
 
