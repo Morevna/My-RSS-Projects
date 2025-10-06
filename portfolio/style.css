@@ -650,15 +650,15 @@ a.hero__scroll-down-text-text {
 }
 
 .portfolio__slider {
-  /* margin-left: -135px; */
-  /* overflow-x: auto; */
-  /* padding-right: 5px; */
-  /* transform: translateX(-124px); */
+  /* position: absolute;
+  width: 60vw; */
+  overflow-x: auto;
   display: flex;
   gap: 20px;
   padding-top: 40px;
   overflow-x: scroll;
   overflow-y: hidden;
+  scrollbar-width: none;
   /* scroll-snap-type: x mandatory;*/
   /* scroll-behavior: smooth; */
 }
@@ -837,8 +837,9 @@ a.hero__scroll-down-text-text {
   display: none;
 
 }
-.pricing__modal-overlay.open{
-    position: fixed;
+
+.pricing__modal-overlay.open {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;

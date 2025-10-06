@@ -20,13 +20,58 @@ links.forEach(link => {
 });
 ///////////////////////////////////////////////////////////////
 
-const slider = document.querySelector('.portfolio__slider');
-const leftZone = document.querySelector('.scroll-zone--left');
-const rightZone = document.querySelector('.scroll-zone--right');
+document.addEventListener('DOMContentLoaded', () => {
+  const slider = document.querySelector('.portfolio__slider');
+  const leftZone = document.querySelector('.scroll-zone--left');
+  const rightZone = document.querySelector('.scroll-zone--right');
+
+  const centerPosition = (slider.scrollWidth - slider.clientWidth) / 2;
+  slider.scrollLeft = centerPosition;
+
+  let scrollInterval = null;
+
+  function startScroll(direction) {
+    stopScroll();
+
+    scrollInterval = setInterval(() => {
+      slider.scrollLeft += direction === 'right' ? 5 : -5;
+    }, 16);
+  }
+
+  function stopScroll() {
+    clearInterval(scrollInterval);
+    scrollInterval = null;
+  }
+
+  leftZone.addEventListener('mouseenter', () => startScroll('left'));
+  leftZone.addEventListener('mouseleave', stopScroll);
+
+  rightZone.addEventListener('mouseenter', () => startScroll('right'));
+  rightZone.addEventListener('mouseleave', stopScroll);
 
 
+  let startX = 0;
 
+  slider.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
 
+  slider.addEventListener('touchmove', (e) => {
+    const currentX = e.touches[0].clientX;
+    const deltaX = startX - currentX;
+
+    slider.scrollLeft += deltaX;
+
+    startX = currentX;
+  });
+});
+
+// По умолчанию ползунок должен быть горизонтально отцентрирован на странице: +4
+// На десктопе прокрутка слайдера активируется наведением курсора на левую или правую область: +8
+// На десктопе активная область прокрутки ползунка составляет ~30% ширины экрана с каждой стороны: +8
+// На рабочем столе оставшаяся область в центре неактивна: +4
+// На мобильном устройстве ползунок прокручивается свайпом пальцем:+8
+// Конечные положения ползунка выравниваются по содержимому страницы с обеих сторон. Прокрутка заблокирована за пределами этих значений: +8.
 
 ///////////////////////////////////////////////////////////////
 // По умолчанию открыт первый аккордеон: +4
@@ -68,9 +113,9 @@ if (savedId) {
 
 // Добавляю этот блок: закрываю все остальные элементы кроме открытого
 faqItems.forEach(item => {
-  // Получаем id открытого элемента (savedId или первый открытый)
+  // Получаем id открытого элемента - savedId или первый открытый
   const openId = savedId || (faqItems.length > 0 ? faqItems[0].dataset.id : null);
-  
+
   // Если id элемента не совпадает с открытым — закрываю его
   if (item.dataset.id !== openId) {
     const answer = item.querySelector('.faq__answer');
@@ -119,24 +164,24 @@ faqItems.forEach(item => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const priceBtn = document.querySelectorAll('.pricing-card__btn');
-const modalOverlay = document.querySelector('.pricing__modal-overlay');
-const modalCloseBtn = document.querySelector('.pricing__modal-close-btn');
-priceBtn.forEach(btn => {
-  btn.addEventListener('click', () => {
-    html.classList.toggle('no-scroll');
-    modalOverlay.classList.toggle('open');
-  })
-});
+  const modalOverlay = document.querySelector('.pricing__modal-overlay');
+  const modalCloseBtn = document.querySelector('.pricing__modal-close-btn');
+  priceBtn.forEach(btn => {
+    btn.addEventListener('click', () => {
+      html.classList.toggle('no-scroll');
+      modalOverlay.classList.toggle('open');
+    })
+  });
 
-modalCloseBtn.addEventListener('click', () => {
-  html.classList.remove('no-scroll');
-  modalOverlay.classList.remove('open');
-});
-
-modalOverlay?.addEventListener('click', (event) => {
-  if (event.target === modalOverlay) {
+  modalCloseBtn.addEventListener('click', () => {
     html.classList.remove('no-scroll');
     modalOverlay.classList.remove('open');
-  }
-});
+  });
+
+  modalOverlay?.addEventListener('click', (event) => {
+    if (event.target === modalOverlay) {
+      html.classList.remove('no-scroll');
+      modalOverlay.classList.remove('open');
+    }
+  });
 });
