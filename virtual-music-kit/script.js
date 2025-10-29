@@ -18,24 +18,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const key = document.createElement("div");
     key.classList.add("white-key");
     key.textContent = note;
-
+    key.addEventListener("click", () => playSound(key.textContent));
+// создание шестерёнки
     const gearBtn = document.createElement("button");
     const gearIcon = document.createElement("i");
     gearIcon.classList.add("bi", "bi-gear-fill");
-
     gearBtn.appendChild(gearIcon);
-
     const editInput = document.createElement("input");
     editInput.type = "text";
     editInput.maxLength = 1;
     editInput.classList.add("form-control", "edit-input");
-
     // Показ поля при клике на шестерёнку
     gearBtn.addEventListener("click", () => {
       editInput.style.display = "block";
       editInput.focus();
     });
-
     // Сохранение изменения буквы клавиши
     editInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -59,6 +56,23 @@ document.addEventListener("DOMContentLoaded", () => {
     blackKey.style.left = whiteIndex * whiteKeyWidth + (whiteKeyWidth - 40 / 2) + "px";
     keysContainer.appendChild(blackKey);
   });
+
+  // объект для хранения звуков
+  const sounds = {};
+  whiteKeys.forEach(note => {
+    sounds[note] = new Audio(`sounds/${note}.mp3`);
+  });
+  // Добавдение звука
+ function playSound(note) {
+    const audio = sounds[note];
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play();
+  }
+
+
+
+
 
   // Поле для последовательности и кнопка Play
   const sequenceContainer = document.createElement("div");
