@@ -2,6 +2,14 @@ main {
   padding: 2rem;
 }
 
+.container {
+  background-image: url('piano.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
 .keys-container {
   position: relative;
   height: 250px;

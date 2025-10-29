@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const whiteKeys = ["C", "D", "E", "F", "G", "A", "B"];
   const whiteKeyWidth = 60;
 
-  const whiteKeyElements = [];
-
   // Создание белых клавиш с кнопкой-шестерёнкой
   whiteKeys.forEach((note, index) => {
     const wrapper = document.createElement("div");
@@ -22,8 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
     key.textContent = note;
 
     const gearBtn = document.createElement("button");
-    gearBtn.classList.add("gear-btn", "btn", "btn-secondary");
-    gearBtn.innerHTML = '<i class="bi bi-gear-fill"></i>';
+    const gearIcon = document.createElement("i");
+    gearIcon.classList.add("bi", "bi-gear-fill");
+
+    gearBtn.appendChild(gearIcon);
 
     const editInput = document.createElement("input");
     editInput.type = "text";
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.appendChild(gearBtn);
     wrapper.appendChild(editInput);
     keysContainer.appendChild(wrapper);
-    whiteKeyElements.push(key);
   });
 
   // Черные клавиши декор
@@ -61,4 +60,19 @@ document.addEventListener("DOMContentLoaded", () => {
     keysContainer.appendChild(blackKey);
   });
 
+  // Поле для последовательности и кнопка Play
+  const sequenceContainer = document.createElement("div");
+  sequenceContainer.classList.add("d-flex", "align-items-center", "gap-2", "mt-4");
+  main.appendChild(sequenceContainer);
+
+  const sequenceInput = document.createElement("input");
+  sequenceInput.type = "text";
+  sequenceInput.classList.add("form-control");
+  sequenceInput.placeholder = "Type your sequence (C E G B...)";
+
+  const playButton = document.createElement("button");
+  playButton.classList.add("btn", "btn-primary");
+  playButton.textContent = "Play";
+
+  sequenceContainer.append(sequenceInput, playButton);
 });
