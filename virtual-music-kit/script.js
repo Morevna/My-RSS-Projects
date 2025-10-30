@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Set для проверки уникальности клавиш
   const usedKeys = new Set(whiteKeys);
-
+  // нажатие на клавишу кнопкой
+  let keyPressed = false;
   // Функция создания кнопки-шестирёнки
   function createKeyEditor(keyEl, index) {
     const gearBtn = document.createElement("button");
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         usedKeys.delete(oldKey);
         usedKeys.add(newKey);
         keyEl.textContent = newKey;
+        keyEl.setAttribute("data-key", newKey);
 
         if (!sounds[newKey]) sounds[newKey] = new Audio(`sounds/${newKey}.mp3`);
       }
@@ -66,7 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const key = document.createElement("div");
     key.classList.add("white-key");
     key.textContent = note;
-    key.addEventListener("click", () => playSound(key.textContent));
+
+    key.setAttribute("data-key", note);
+
+    key.addEventListener("click", () => {
+      playSound(key.textContent);
+      key.classList.add("active");
+      setTimeout(() => key.classList.remove("active"), 150);
+    });
 
     const { gearBtn, editInput } = createKeyEditor(key, index);
 
@@ -75,13 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Черные клавиши
-  const blackKeyOffsets = [0, 1, 3, 4, 5];
-  blackKeyOffsets.forEach(i => {
-    const blackKey = document.createElement("div");
-    blackKey.classList.add("black-key");
-    blackKey.style.left = i * whiteKeyWidth + (whiteKeyWidth - 40 / 2) + "px";
-    keysContainer.appendChild(blackKey);
-  });
+  // const blackKeyOffsets = [0, 1, 3, 4, 5];
+  // blackKeyOffsets.forEach(i => {
+  //   const blackKey = document.createElement("div");
+  //   blackKey.classList.add("black-key");
+  //   blackKey.style.left = i * whiteKeyWidth + (whiteKeyWidth - 40 / 2) + "px";
+  //   keysContainer.appendChild(blackKey);
+  // });
 
   // Включение звука
   function playSound(note) {
@@ -90,6 +99,30 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.currentTime = 0;
     audio.play();
   }
+
+
+//обраб клавиатуры
+  document.addEventListener("keydown", (e) => {
+    if (keyPressed) return; // не повторять звук при удержании
+    const pressedKey = e.key.toUpperCase();
+    if (!sounds[pressedKey]) return;
+
+    keyPressed = true;
+    playSound(pressedKey);
+
+        const keyElement = document.querySelector(`.white-key[data-key='${pressedKey}']`);
+    if (keyElement) keyElement.classList.add("active");
+  });
+
+document.addEventListener("keyup", (e) => {
+    const releasedKey = e.key.toUpperCase();
+    const keyElement = document.querySelector(`.white-key[data-key='${releasedKey}']`);
+    if (keyElement) keyElement.classList.remove("active");
+    keyPressed = false;
+});
+
+
+
 
   // Поле для последовательности и кнопка Play
   const sequenceContainer = document.createElement("div");
