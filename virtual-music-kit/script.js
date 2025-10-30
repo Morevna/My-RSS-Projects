@@ -10,7 +10,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const whiteKeys = ["C", "D", "E", "F", "G", "A", "B"];
   const whiteKeyWidth = 60;
 
-  // Создание белых клавиш с кнопкой-шестерёнкой
+  // Объект для хранения звуков
+  const sounds = {};
+  whiteKeys.forEach(note => sounds[note] = new Audio(`sounds/${note}.mp3`));
+
+  // Set для проверки уникальности клавиш
+  const usedKeys = new Set(whiteKeys);
+
+  // Функция создания кнопки-шестирёнки
+  function createKeyEditor(keyEl, index) {
+    const gearBtn = document.createElement("button");
+    const gearIcon = document.createElement("i");
+    gearIcon.classList.add("bi", "bi-gear-fill");
+    gearBtn.appendChild(gearIcon);
+
+    const editInput = document.createElement("input");
+    editInput.type = "text";
+    editInput.maxLength = 1;
+    editInput.classList.add("form-control", "edit-input");
+
+    gearBtn.addEventListener("click", () => {
+      editInput.style.display = "block";
+      editInput.value = keyEl.textContent;
+      editInput.focus();
+    });
+//замена буквы
+    editInput.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+
+      const newKey = editInput.value.toUpperCase();
+      const oldKey = keyEl.textContent;
+
+      if (!/^[A-Z]$/.test(newKey)) alert("Only English letters!");
+      else if (newKey !== oldKey && usedKeys.has(newKey)) alert("This key is already taken!");
+      else {
+        usedKeys.delete(oldKey);
+        usedKeys.add(newKey);
+        keyEl.textContent = newKey;
+
+        if (!sounds[newKey]) sounds[newKey] = new Audio(`sounds/${newKey}.mp3`);
+      }
+
+      editInput.value = "";
+      editInput.style.display = "none";
+    });
+
+    return { gearBtn, editInput };
+  }
+
+  // Создание белых клавиш
   whiteKeys.forEach((note, index) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("white-key-wrapper");
@@ -19,60 +67,29 @@ document.addEventListener("DOMContentLoaded", () => {
     key.classList.add("white-key");
     key.textContent = note;
     key.addEventListener("click", () => playSound(key.textContent));
-// создание шестерёнки
-    const gearBtn = document.createElement("button");
-    const gearIcon = document.createElement("i");
-    gearIcon.classList.add("bi", "bi-gear-fill");
-    gearBtn.appendChild(gearIcon);
-    const editInput = document.createElement("input");
-    editInput.type = "text";
-    editInput.maxLength = 1;
-    editInput.classList.add("form-control", "edit-input");
-    // Показ поля при клике на шестерёнку
-    gearBtn.addEventListener("click", () => {
-      editInput.style.display = "block";
-      editInput.focus();
-    });
-    // Сохранение изменения буквы клавиши
-    editInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        key.textContent = editInput.value || note;
-        editInput.value = "";
-        editInput.style.display = "none";
-      }
-    });
 
-    wrapper.appendChild(key);
-    wrapper.appendChild(gearBtn);
-    wrapper.appendChild(editInput);
+    const { gearBtn, editInput } = createKeyEditor(key, index);
+
+    wrapper.append(key, gearBtn, editInput);
     keysContainer.appendChild(wrapper);
   });
 
-  // Черные клавиши декор
+  // Черные клавиши
   const blackKeyOffsets = [0, 1, 3, 4, 5];
-  blackKeyOffsets.forEach((whiteIndex) => {
+  blackKeyOffsets.forEach(i => {
     const blackKey = document.createElement("div");
     blackKey.classList.add("black-key");
-    blackKey.style.left = whiteIndex * whiteKeyWidth + (whiteKeyWidth - 40 / 2) + "px";
+    blackKey.style.left = i * whiteKeyWidth + (whiteKeyWidth - 40 / 2) + "px";
     keysContainer.appendChild(blackKey);
   });
 
-  // объект для хранения звуков
-  const sounds = {};
-  whiteKeys.forEach(note => {
-    sounds[note] = new Audio(`sounds/${note}.mp3`);
-  });
-  // Добавдение звука
- function playSound(note) {
+  // Включение звука
+  function playSound(note) {
     const audio = sounds[note];
     if (!audio) return;
     audio.currentTime = 0;
     audio.play();
   }
-
-
-
-
 
   // Поле для последовательности и кнопка Play
   const sequenceContainer = document.createElement("div");
