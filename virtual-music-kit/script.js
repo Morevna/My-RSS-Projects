@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.createElement("main");
   main.classList.add("container", "my-5");
   document.body.appendChild(main);
-
+// контейнер для хранения клавиш
   const keysContainer = document.createElement("div");
   keysContainer.classList.add("keys-container");
   main.appendChild(keysContainer);
@@ -23,18 +23,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const gearIcon = document.createElement("i");
     gearIcon.classList.add("bi", "bi-gear-fill");
     gearBtn.appendChild(gearIcon);
-
+// созд поле ввода
     const editInput = document.createElement("input");
     editInput.type = "text";
     editInput.maxLength = 1;
     editInput.classList.add("form-control", "edit-input");
-
+//показ поле ввода
     gearBtn.addEventListener("click", () => {
       editInput.style.display = "block";
       editInput.value = keyEl.textContent;
       editInput.focus();
     });
-//замена буквы
+    //замена буквы
     editInput.addEventListener("keydown", (e) => {
       if (e.key !== "Enter") return;
 
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!sounds[newKey]) sounds[newKey] = new Audio(`sounds/${newKey}.mp3`);
       }
-
+//очищ и скрываю
       editInput.value = "";
       editInput.style.display = "none";
     });
@@ -100,10 +100,15 @@ document.addEventListener("DOMContentLoaded", () => {
   sequenceInput.type = "text";
   sequenceInput.classList.add("form-control");
   sequenceInput.placeholder = "Type your sequence (C E G B...)";
-
+//кнопка
   const playButton = document.createElement("button");
   playButton.classList.add("btn", "btn-primary");
   playButton.textContent = "Play";
+//функция проигрывания
+  playButton.addEventListener("click", () => {
+    const notes = sequenceInput.value.split("").map(n => n.toUpperCase());
+    notes.forEach((note, i) => setTimeout(() => playSound(note), i * 500));
+  });
 
   sequenceContainer.append(sequenceInput, playButton);
 });
