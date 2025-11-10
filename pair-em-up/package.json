@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://rolling-scopes-school.github.io/morevna-JSFE2025Q3/pair-em-up/",  <-- 1. ДОБАВИТЬ ЭТУ СТРОКУ
+  "homepage": "https://rolling-scopes-school.github.io/morevna-JSFE2025Q3/pair-em-up/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
