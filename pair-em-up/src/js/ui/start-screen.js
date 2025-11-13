@@ -1,10 +1,12 @@
+import { renderGameScreen } from './game-screen.js';
+
 export function renderStartScreen() {
   // Очистка body
   document.body.innerHTML = '';
   // создание html
   const container = document.createElement('div');
   container.classList.add('start-screen');
-  
+
   const title = document.createElement('h1');
   title.textContent = 'Pair ’em Up';
 
@@ -12,13 +14,13 @@ export function renderStartScreen() {
   modeButtons.classList.add('mode-buttons');
 
   const classicBtn = document.createElement('button');
-  classicBtn.textContent = 'Classic Mode';
+  classicBtn.textContent = 'classic';
 
   const randomBtn = document.createElement('button');
-  randomBtn.textContent = 'Random Mode';
+  randomBtn.textContent = 'random';
 
   const chaoticBtn = document.createElement('button');
-  chaoticBtn.textContent = 'Chaotic Mode';
+  chaoticBtn.textContent = 'chaotic';
 
   modeButtons.append(classicBtn, randomBtn, chaoticBtn);
 
@@ -43,7 +45,7 @@ export function renderStartScreen() {
   author.classList.add('author');
 
   const authorLink = document.createElement('a');
-  authorLink.href = 'https://github.com/Morevna/'; 
+  authorLink.href = 'https://github.com/Morevna/';
   authorLink.target = '_blank';
   authorLink.textContent = '@morevna';
 
@@ -55,7 +57,7 @@ export function renderStartScreen() {
   document.body.append(container);
 
   // Обраблтчики 
-//   classicBtn.addEventListener('click', ());
-//   randomBtn.addEventListener('click', ());
-//   chaoticBtn.addEventListener('click', ());
+  classicBtn.addEventListener('click', () => renderGameScreen('classic'));
+  randomBtn.addEventListener('click', () => renderGameScreen('random'));
+  chaoticBtn.addEventListener('click', () => renderGameScreen('chaotic'));
 }

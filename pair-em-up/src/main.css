@@ -5,7 +5,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #1b1b1b;
+  background: #2d1d17;
   color: #fff;
 }
 
@@ -28,7 +28,7 @@ body {
 }
 
 button {
-  background: #444;
+  background: #666780;
   color: #fff;
   border: none;
   padding: 0.7rem 1.4rem;
@@ -39,13 +39,13 @@ button {
 }
 
 button:hover {
-  background: #666;
+  background: #2d2d32;
 }
 
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #333;
+  background: #43434b;
 }
 
 .author {
@@ -54,10 +54,107 @@ button:disabled {
 }
 
 .author a {
-  color: #0ff;
+  color: #94c2cf;
   text-decoration: none;
 }
 
 .author a:hover {
   text-decoration: underline;
+}
+
+
+/* игровой экран */
+@keyframes pulse {
+0% {
+        background-color: #4e482f;
+    }
+    50% {
+        background-color: #184d39;
+        box-shadow: 0 0 50px rgba(83, 125, 173, 0.2) inset;
+    }
+    100% {
+        background-color: #4e482f;
+    }
+}
+
+.flash-effect {
+    animation: pulse 0.5s ease-out; 
+}
+.game-screen {
+  display: flex;
+  justify-content: flex-start; 
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100%;
+  background: #4e482f;
+  color: #222;
+  padding: 20px 0;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(9, clamp(24px, 6vw, 60px));
+  gap: clamp(2px, 0.5vw, 6px); 
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.cell {
+  aspect-ratio: 1 / 1;
+  background: #bcc18c;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: clamp(8px, 2vw, 18px);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  .cell { font-size: 14px; }
+}
+@media (max-width: 400px) {
+  .cell { font-size: 12px; }
+}
+@media (max-width: 300px) {
+  .cell { font-size: 10px; }
+  .grid-container {
+  overflow-x: scroll;
+}
+}
+@media (max-width: 250px) {
+  .cell { font-size: 10px; }
+  .grid-container {
+  overflow-x: scroll;
+  width: 95%;
+  gap: 1px;
+}
+}
+
+.back-btn {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background: #6b0012;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: rgb(175, 42, 28);
 }
