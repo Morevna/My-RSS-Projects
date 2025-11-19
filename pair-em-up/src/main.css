@@ -5,8 +5,9 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #2d1d17;
+  background: #9e6652;
   color: #fff;
+  transition: background 0.3s, color 0.3s;
 }
 
 .start-screen {
@@ -62,7 +63,6 @@ button:disabled {
   text-decoration: underline;
 }
 
-
 /* игровой экран */
 @keyframes pulse {
   0% {
@@ -83,16 +83,16 @@ button:disabled {
   animation: pulse 0.5s ease-out;
 }
 
+/* ///////////////////////////////// */
 .game-screen {
   overflow: hidden;
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   min-width: 100%;
-  background: #4e482f;
+  background: #716845;
   color: #222;
   padding: 20px 0;
 }
@@ -126,6 +126,12 @@ button:disabled {
   align-items: center;
   justify-content: center;
   user-select: none;
+  transition: background 0.3s, transform 0.3s, opacity 0.3s;
+}
+
+.cell.selected {
+  background: #ffd700;
+  transform: scale(1.1);
 }
 
 @media (max-width: 600px) {
@@ -187,61 +193,7 @@ button:disabled {
   background-color: #48293d;
 }
 
-
-.cell {
-  transition: background 0.3s, transform 0.3s, opacity 0.3s;
-}
-
-.cell.selected {
-  background: #ffd700;
-  transform: scale(1.1);
-}
-
-/* .cell.matched {
-  background: #32cd32;
-  opacity: 0;
-  transform: scale(0.8);
-} */
-
 /* настройки */
-
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #2d1d17;
-  color: #fff;
-  transition: background 0.3s, color 0.3s;
-}
-
-button {
-  background: #666780;
-  color: #fff;
-  border: none;
-  padding: 0.7rem 1.4rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background: #2d2d32;
-}
-
-.game-screen {
-  background: #4e482f;
-  color: #222;
-}
-
-.cell {
-  background: #bcc18c;
-  border: 1px solid #ccc;
-}
-
 .settings-overlay {
   position: fixed;
   top: 0;
@@ -249,7 +201,6 @@ button:hover {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  /* Затемнение */
   display: none;
   z-index: 1000;
   justify-content: center;
@@ -299,6 +250,31 @@ button:hover {
   margin-top: 5px;
 }
 
+/* темы  ............................... */
+
+/* светлая */
+body.theme-light {
+  background: #9e6652;
+  color: #fff;
+}
+
+body.theme-light .game-screen {
+  background: #716845;
+  color: #222;
+}
+
+body.theme-light .cell {
+  background: #bcc18c;
+  border: 1px solid #ccc;
+  color: #222;
+}
+
+body.theme-light .settings-panel {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* тёмная */
 body.theme-dark {
   background: #121212;
   color: #e0e0e0;
@@ -336,7 +312,6 @@ body.theme-dark .settings-panel .close-btn {
 body.theme-dark .setting-section {
   border-top: 1px solid #444;
 }
-
 
 /* хэллоуин */
 body.theme-halloween {

@@ -1,10 +1,9 @@
-function createSettingsPanel() {
+export function createSettingsPanel() {
     const overlay = document.createElement('div');
     overlay.id = 'settings-overlay';
     overlay.className = 'settings-overlay';
 
     const panel = document.createElement('div');
-    panel.id = 'settings-panel';
     panel.className = 'settings-panel';
 
     const title = document.createElement('h3');
@@ -17,89 +16,77 @@ function createSettingsPanel() {
     closeBtn.addEventListener('click', toggleSettingsPanel);
     panel.appendChild(closeBtn);
 
-    // звук
-
-    // темы////
     const themeSection = document.createElement('div');
     themeSection.className = 'setting-section';
+
     const themeTitle = document.createElement('h4');
-    themeTitle.textContent = 'display control ';
+    themeTitle.textContent = 'Display control';
     themeSection.appendChild(themeTitle);
 
-    // 
-    const lightDarkToggle = document.createElement('button');
-    lightDarkToggle.textContent = 'Dark /Light';
-    lightDarkToggle.className = 'theme-toggle-btn';
-    lightDarkToggle.addEventListener('click', () => switchTheme('dark-light'));
-    themeSection.appendChild(lightDarkToggle);
+    const lightDarkBtn = document.createElement('button');
+    lightDarkBtn.textContent = 'Dark / Light';
+    lightDarkBtn.addEventListener('click', () => switchTheme('dark-light'));
+    themeSection.appendChild(lightDarkBtn);
 
-    // 
-    const halloweenToggle = document.createElement('button');
-    halloweenToggle.textContent = 'Halloween';
-    halloweenToggle.className = 'theme-toggle-btn';
-    halloweenToggle.addEventListener('click', () => switchTheme('halloween'));
-    themeSection.appendChild(halloweenToggle);
+    const halloweenBtn = document.createElement('button');
+    halloweenBtn.textContent = 'Halloween';
+    halloweenBtn.addEventListener('click', () => switchTheme('halloween'));
+    themeSection.appendChild(halloweenBtn);
 
-    //
-    const christmasToggle = document.createElement('button');
-    christmasToggle.textContent = 'Сhristmas';
-    christmasToggle.className = 'theme-toggle-btn';
-    christmasToggle.addEventListener('click', () => switchTheme('christmas'));
-    themeSection.appendChild(christmasToggle);
+
+    const christmasBtn = document.createElement('button');
+    christmasBtn.textContent = 'Christmas';
+    christmasBtn.addEventListener('click', () => switchTheme('christmas'));
+    themeSection.appendChild(christmasBtn);
 
     panel.appendChild(themeSection);
     overlay.appendChild(panel);
 
-    overlay.addEventListener('click', (event) => {
-        if (event.target === overlay) {
-            toggleSettingsPanel();
-        }
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) toggleSettingsPanel();
     });
 
     return overlay;
 }
 
-// закрыть панель
 export function toggleSettingsPanel() {
     let overlay = document.getElementById('settings-overlay');
 
     if (!overlay) {
         overlay = createSettingsPanel();
         document.body.appendChild(overlay);
-        overlay.setAttribute('data-visible', 'true');
-    } else {
-        const isVisible = overlay.getAttribute('data-visible') === 'true';
-        overlay.setAttribute('data-visible', (!isVisible).toString());
     }
+
+    const isVisible = overlay.getAttribute('data-visible') === 'true';
+    overlay.setAttribute('data-visible', (!isVisible).toString());
 }
 
-//переключение тем
-function switchTheme(newTheme) {
-    const themeTarget = document.body;
-    themeTarget.classList.remove('theme-dark', 'theme-light', 'theme-halloween', 'theme-christmas');
 
-    if (newTheme === 'dark-light') {
-        if (themeTarget.classList.contains('theme-dark')) {
-            localStorage.setItem('game-theme', 'default');
-        } else {
-            themeTarget.classList.add('theme-dark');
-            localStorage.setItem('game-theme', 'dark');
-        }
-    } else if (newTheme === 'halloween') {
-        themeTarget.classList.add('theme-halloween');
+function switchTheme(theme) {
+    const body = document.body;
+
+    if (theme === 'dark-light') {
+        body.classList.remove('theme-halloween', 'theme-christmas');
+        body.classList.toggle('theme-dark');
+        localStorage.setItem('game-theme', body.classList.contains('theme-dark') ? 'dark' : 'default');
+        return;
+    }
+
+    body.classList.remove('theme-dark', 'theme-halloween', 'theme-christmas');
+
+    if (theme === 'halloween') {
+        body.classList.add('theme-halloween');
         localStorage.setItem('game-theme', 'halloween');
-    } else if (newTheme === 'christmas') {
-        themeTarget.classList.add('theme-christmas');
+    } else if (theme === 'christmas') {
+        body.classList.add('theme-christmas');
         localStorage.setItem('game-theme', 'christmas');
     }
 }
 
-// 
-export function applyInitialTheme() {
-    const savedTheme = localStorage.getItem('game-theme') || 'default';
-    const themeTarget = document.body;
 
-    if (savedTheme !== 'default') {
-        themeTarget.classList.add(`theme-${savedTheme}`);
-    }
+export function applyInitialTheme() {
+    const savedTheme = localStorage.getItem('game-theme');
+    if (!savedTheme || savedTheme === 'default') return;
+
+    document.body.classList.add(`theme-${savedTheme}`);
 }
