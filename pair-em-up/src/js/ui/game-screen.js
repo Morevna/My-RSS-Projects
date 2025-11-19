@@ -1,5 +1,6 @@
 import { renderStartScreen } from './start-screen.js';
 import { GridManager } from '/src/js/logic.js';
+import { toggleSettingsPanel } from './settings-panel.js';
 
 
 export function renderGameScreen(mode = 'classic') {
@@ -121,6 +122,7 @@ export function renderGameScreen(mode = 'classic') {
 
   const settingsBtn = document.createElement('button');
   settingsBtn.textContent = '⚙️ Settings';
+  settingsBtn.addEventListener('click', toggleSettingsPanel);
 
   assistButtons.append(hintsBtn, revertBtn, addNumbersBtn, shuffleBtn, eraserBtn, settingsBtn);
 

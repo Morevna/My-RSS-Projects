@@ -1,4 +1,5 @@
 import { renderGameScreen } from './game-screen.js';
+import { toggleSettingsPanel } from './settings-panel.js';
 
 export function renderStartScreen() {
   // Очистка body
@@ -45,6 +46,7 @@ export function renderStartScreen() {
   Все интерактивные элементы и индикаторы*/
   const settingsBtn = document.createElement('button');
   settingsBtn.textContent = '⚙️ Settings';
+  settingsBtn.addEventListener('click', toggleSettingsPanel);
 
   //Ведение журнала игры: каждая завершенная игра сохраняет: 
   // выбранный режим, окончательный счет, результат победы/поражения, 
