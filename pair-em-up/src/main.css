@@ -1,10 +1,10 @@
 body {
+  min-height: 100vh;
+  display: block;
   margin: 0;
   font-family: system-ui, sans-serif;
-  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background: #9e6652;
   color: #fff;
   transition: background 0.3s, color 0.3s;
@@ -85,16 +85,14 @@ button:disabled {
 
 /* ///////////////////////////////// */
 .game-screen {
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 40px 0 20px;
   min-height: 100vh;
-  min-width: 100%;
+  width: 100%;
   background: #716845;
   color: #222;
-  padding: 20px 0;
 }
 
 .game-header {
@@ -106,13 +104,14 @@ button:disabled {
 }
 
 .grid-container {
+  margin-top: 20px;
   display: grid;
+  justify-content: center;
   grid-template-columns: repeat(9, clamp(24px, 6vw, 60px));
   gap: clamp(2px, 0.5vw, 6px);
-  justify-content: center;
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .cell {
@@ -132,6 +131,16 @@ button:disabled {
 .cell.selected {
   background: #ffd700;
   transform: scale(1.1);
+}
+
+.mode-buttons,
+.utility-buttons,
+.control-buttons,
+.assist-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 @media (max-width: 600px) {
