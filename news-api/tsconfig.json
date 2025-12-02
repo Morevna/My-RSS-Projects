@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es6",                     // Поддержка современных браузеров
-    "module": "es6",                     // ES-модули
-    "moduleResolution": "node",          // Разрешение модулей как в Node.js
-    "esModuleInterop": true,             // Для импорта CommonJS модулей
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,                      // Включает все строгие проверки
-    "noImplicitAny": true,               // Запрет использования any
-    "declaration": true,                 // Генерация .d.ts файлов
+    "strict": true,
+    "noImplicitAny": true,
+    "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,                   // Для дебага
-    "outDir": "./dist",                  // Папка для сборки
-    "rootDir": "./src",                  // Корневая папка исходников
-    "skipLibCheck": true,                // Пропустить проверку типов в node_modules
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true,
     "strictPropertyInitialization": false,
     "noUncheckedIndexedAccess": true,
-    "resolveJsonModule": true            // Чтобы можно было импортировать JSON
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"],               // Включаем все файлы TypeScript в src
-  "exclude": ["node_modules", "dist"]    // Исключаем node_modules и сборку
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

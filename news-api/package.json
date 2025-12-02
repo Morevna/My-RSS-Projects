@@ -1,5 +1,5 @@
 {
-    "name": "NewsJS",
+    "name": "news-api",
     "version": "1.0.0",
     "description": "",
     "main": "webpack.base.config.js",
@@ -19,6 +19,7 @@
     "devDependencies": {
         "@types/node": "^20.19.25",
         "@types/ws": "^8.18.1",
+        "@typescript-eslint/eslint-plugin": "^8.48.1",
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^12.0.2",
         "css-loader": "^6.10.0",
@@ -30,6 +31,7 @@
         "html-webpack-plugin": "^5.6.0",
         "prettier": "3.2.5",
         "style-loader": "^3.3.4",
+        "ts-loader": "^9.5.4",
         "typescript": "^5.9.3",
         "webpack": "^5.90.1",
         "webpack-cli": "^5.1.4",
