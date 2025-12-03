@@ -3,11 +3,11 @@ import { AppView } from '../view/appView';
 
 class App {
     constructor() {
-        this.controller = new AppController();
-        this.view = new AppView();
+        private controller = new AppController();
+        private view = new AppView();
     }
 
-    start() {
+    start(): void {
         document
             .querySelector('.sources')
             .addEventListener('click', (e) => this.controller.getNews(e, (data) => this.view.drawNews(data)));
