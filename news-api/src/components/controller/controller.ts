@@ -3,7 +3,7 @@ import { Article, ArticlesResponse, Source, SourcesResponse } from '../../types/
 
 class AppController extends AppLoader {
     getSources(callback: (data: Source[]) => void): void {
-        super.getResp<SourcesResponse>({ endpoint: 'sources' }, (data) => {
+        super.getResp<SourcesResponse>({ endpoint: 'mocks/sources' }, (data) => {
             callback(data.sources);
         });
     }
@@ -20,7 +20,7 @@ class AppController extends AppLoader {
 
                     super.getResp<ArticlesResponse>(
                         {
-                            endpoint: 'everything',
+                            endpoint: 'mocks/everything',
                             options: { sources: sourceId ?? '' },
                         },
                         (data) => {

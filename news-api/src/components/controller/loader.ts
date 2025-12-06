@@ -40,7 +40,7 @@ class Loader {
             }
         });
 
-        return `${this.baseLink}${endpoint}?${params.toString()}`;
+        return `${this.baseLink}/${endpoint}?${params.toString()}`;
     }
     //Самое главн - Делает сам запрос к серверу.
     private load<T>(method: string, endpoint: string, callback: (data: T) => void, options: LoadOptions = {}): void {
