@@ -1,47 +1,53 @@
-class Loader {
-    private baseLink: string;
-    private options: { [key: string]: string | number };
+interface LoadOptions {
+    [key: string]: string | number | undefined;
+}
 
-    constructor(baseLink: string, options: { [key: string]: string | number }) {
+interface RequestParams {
+    endpoint: string;
+    options?: LoadOptions;
+}
+//загрузчик данных (делает запросы)
+class Loader {
+    private readonly baseLink: string;
+    private readonly options: LoadOptions;
+
+    constructor(baseLink: string, options: LoadOptions) {
         this.baseLink = baseLink;
         this.options = options;
     }
-
-    getResp(
-        { endpoint, options = {} },
-        callback = () => {
-            console.error('No callback for GET response');
-        }
-    ) {
-        this.load('GET', endpoint, callback, options);
+    //дженерик потому что я не знаю заранее, какой тип данных вернёт сервер
+    public getResp<T>({ endpoint, options = {} }: RequestParams, callback: (data: T) => void): void {
+        this.load<T>('GET', endpoint, callback, options);
     }
-
-    errorHandler(res) {
+    //пришла ли ошибка от сервера
+    private errorHandler(res: Response): Response {
         if (!res.ok) {
-            if (res.status === 401 || res.status === 404)
-                console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
-            throw Error(res.statusText);
+            if (res.status === 401 || res.status === 404) {
+                console.error(`Sorry, but there is ${res.status} error: ${res.statusText}`);
+            }
+            throw new Error(res.statusText);
         }
-
         return res;
     }
-
-    makeUrl(options, endpoint) {
+    //собирает строку URL, для отправки запроса на сервер
+    private makeUrl(options: LoadOptions, endpoint: string): string {
         const urlOptions = { ...this.options, ...options };
-        let url = `${this.baseLink}${endpoint}?`;
+        const params = new URLSearchParams();
 
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
+        Object.entries(urlOptions).forEach(([key, value]) => {
+            if (value !== undefined) {
+                params.append(key, String(value));
+            }
         });
 
-        return url.slice(0, -1);
+        return `${this.baseLink}${endpoint}?${params.toString()}`;
     }
-
-    load(method, endpoint, callback, options = {}) {
+    //Самое главн - Делает сам запрос к серверу.
+    private load<T>(method: string, endpoint: string, callback: (data: T) => void, options: LoadOptions = {}): void {
         fetch(this.makeUrl(options, endpoint), { method })
-            .then(this.errorHandler)
-            .then((res) => res.json())
-            .then((data) => callback(data))
+            .then((res) => this.errorHandler(res))
+            .then((res) => res.json() as Promise<T>)
+            .then((data: T) => callback(data))
             .catch((err) => console.error(err));
     }
 }
