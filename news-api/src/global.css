@@ -1,9 +1,25 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    
+}
 body {
+    display: flex;
+    flex-direction: column;
     color: #fff;
     background: #17181c;
     font-family: sans-serif;
 }
-
+main {
+    padding-bottom: 100px;
+    flex: 1;
+    /* padding: 1rem; */
+}
 header {
     padding: 10px 30px;
 }
@@ -12,24 +28,36 @@ header h1 {
     font-size: 40px;
     font-weight: 800;
 }
-
 footer {
-    height: 100px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 60px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
+    padding: 1rem 2rem;
+    font-size: 18px;
+    color: #726f6f;
+    background-color: #17181c;
+    box-sizing: border-box;
 }
-footer .copyright {
-    font-size: 14px;
-    color: #333;
-    text-align: center;
-}
-footer .copyright a {
+
+footer .copyright a,
+footer .footer-link a {
     color: #444;
 }
-footer .copyright a:hover {
+
+footer .copyright a:hover,
+footer .footer-link a:hover {
     color: #555;
 }
 footer .copyright:before {
     content: '©';
+}
+
+footer p {
+    padding-right: 5px;
 }
