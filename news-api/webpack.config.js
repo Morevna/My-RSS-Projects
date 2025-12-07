@@ -1,3 +1,4 @@
+// @ts-nocheck
 const path = require('path');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -9,6 +10,10 @@ const baseConfig = {
     mode: 'development',
     module: {
         rules: [
+            {
+                test: /\.svg$/i,
+                type: 'asset/resource',
+            },
             {
                 test: /\.ts$/i,
                 use: 'ts-loader',
