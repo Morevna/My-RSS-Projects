@@ -2,12 +2,14 @@ import AppLoader from './appLoader';
 import { Article, ArticlesResponse, Source, SourcesResponse } from '../../types/news-api';
 
 class AppController extends AppLoader {
+    //Получает список источников новостей и отдаёт их в callback.
     getSources(callback: (data: Source[]) => void): void {
         super.getResp<SourcesResponse>({ endpoint: 'mocks/sources' }, (data) => {
             callback(data.sources);
         });
     }
-
+    //вызывается при клике по списку источников
+    // возвращает массив новостей
     getNews(e: MouseEvent, callback: (data: Article[]) => void): void {
         let target = e.target as HTMLElement;
         const newsContainer = e.currentTarget as HTMLElement;
@@ -20,7 +22,7 @@ class AppController extends AppLoader {
 
                     super.getResp<ArticlesResponse>(
                         {
-                            endpoint: 'mocks/everything',
+                            endpoint: 'everything',
                             options: { sources: sourceId ?? '' },
                         },
                         (data) => {
