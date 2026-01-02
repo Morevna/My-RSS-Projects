@@ -9,6 +9,20 @@ export class StartView {
     this.container.className = 'start-container';
   }
 
+  private createGreeting(): HTMLElement {
+    const greeting = document.createElement('h2');
+    greeting.className = 'user-greeting';
+
+    const rawData = localStorage.getItem('rss-puzzle-user');
+
+    if (rawData) {
+      const user = JSON.parse(rawData);
+      greeting.textContent = `Hello, ${user.firstName} ${user.surname}!`;
+    }
+
+    return greeting;
+  }
+
   public draw(): void {
     document.body.innerHTML = '';
 
@@ -17,6 +31,8 @@ export class StartView {
     //
     const content = document.createElement('div');
     content.className = 'start-content';
+
+    const greeting = this.createGreeting();
 
     const title = document.createElement('h1');
     title.className = 'app-name';
@@ -27,7 +43,7 @@ export class StartView {
     description.textContent =
       'An interactive game for practicing English sentence construction. Drag and drop words to form sentences from classic literature.';
 
-    content.append(title, description);
+    content.append(greeting, title, description);
     this.container.append(content);
 
     document.body.append(this.container);
