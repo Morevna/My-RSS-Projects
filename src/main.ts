@@ -1,28 +1,16 @@
 import { LoginView } from './pages/login/login-view';
+import { StartView } from './pages/start/start-view';
 
 function initApp() {
   const userData = localStorage.getItem('rss-puzzle-user');
 
   if (userData) {
-    showStartPage();
+    const startPage = new StartView();
+    startPage.draw();
   } else {
     const loginPage = new LoginView();
     loginPage.draw();
   }
-}
-
-function showStartPage() {
-  document.body.innerHTML = `
-    <div class="start-page">
-      <h1>Welcome to the Game!</h1>
-      <button id="logout-btn" class="login-button">Logout</button>
-    </div>
-  `;
-
-  document.getElementById('logout-btn')?.addEventListener('click', () => {
-    localStorage.removeItem('rss-puzzle-user');
-    location.reload();
-  });
 }
 
 initApp();
