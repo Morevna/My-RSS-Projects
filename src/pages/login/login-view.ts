@@ -14,6 +14,7 @@ export class LoginView {
     this.container.className = 'login-container';
     this.createElements();
     this.validate();
+    this.loadUserData();
   }
 
   private createElements(): void {
@@ -24,6 +25,8 @@ export class LoginView {
     form.className = 'login-form';
 
     form.noValidate = true;
+    //
+    form.addEventListener('submit', this.saveToLocalStorage.bind(this));
 
     this.firstNameInput = this.createInput('First Name');
     this.firstNameError = this.createErrorSpan();
@@ -79,5 +82,33 @@ export class LoginView {
   public draw(): void {
     document.body.innerHTML = '';
     document.body.append(this.container);
+  }
+  //
+  private saveToLocalStorage(event: Event): void {
+    event.preventDefault();
+    const userData = {
+      firstName: this.firstNameInput.value,
+      surname: this.surnameInput.value,
+    };
+
+    localStorage.setItem('rss-puzzle-user', JSON.stringify(userData));
+
+    this.loginButton.textContent = 'Saved!';
+    this.loginButton.style.backgroundColor = '#4caf50';
+    this.loginButton.disabled = true;
+    this.loginButton.style.opacity = '1';
+  }
+
+  private loadUserData(): void {
+    const savedData = localStorage.getItem('rss-puzzle-user');
+
+    if (savedData) {
+      const user = JSON.parse(savedData);
+
+      this.firstNameInput.value = user.firstName || '';
+      this.surnameInput.value = user.surname || '';
+
+      this.validate();
+    }
   }
 }
