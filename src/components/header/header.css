@@ -1,0 +1,25 @@
+.main-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.logout-btn {
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 8px 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #ff4d4d;
+  color: white;
+  transform: scale(1.05);
+}
