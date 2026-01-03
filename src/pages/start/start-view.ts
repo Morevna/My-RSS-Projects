@@ -1,4 +1,5 @@
 import { HeaderView } from '../../components/header/header-view';
+import { GameView } from '../game/game-view';
 import './start.css';
 
 export class StartView {
@@ -56,10 +57,7 @@ export class StartView {
   }
 
   private handleStartGame(): void {
-    document.body.innerHTML = '';
-    //
-    const message = document.createElement('h1');
-    message.textContent = 'The Game Begins Soon!';
-    document.body.append(message);
+    const gamePage = new GameView();
+    gamePage.draw();
   }
 }
