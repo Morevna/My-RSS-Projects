@@ -32,17 +32,42 @@
 
 /*карточки */
 .word-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
   padding: 10px 20px;
+  min-width: 40px;
+  max-width: 250px;
+  font-size: 1.1rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   background-color: #646cff;
   color: white;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  user-select: none;
-  transition: all 0.2s ease;
-  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+@media (max-width: 600px) {
+  .word-card {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    min-width: 30px;
+  }
 }
 
 .word-card:hover {
   background-color: #747bff;
   transform: translateY(-2px);
+}
+
+.word-card:active {
+  transform: scale(0.9);
+  opacity: 0.8;
 }
