@@ -1,4 +1,5 @@
 import { getValidationError } from './login-validation';
+import { StartView } from '../start/start-view';
 import './login.css';
 
 export class LoginView {
@@ -96,7 +97,11 @@ export class LoginView {
     this.loginButton.textContent = 'Saved!';
     this.loginButton.style.backgroundColor = '#4caf50';
     this.loginButton.disabled = true;
-    this.loginButton.style.opacity = '1';
+
+    setTimeout(() => {
+      const startPage = new StartView();
+      startPage.draw();
+    }, 1000);
   }
 
   private loadUserData(): void {

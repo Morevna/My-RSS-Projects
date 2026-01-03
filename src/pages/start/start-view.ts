@@ -33,7 +33,6 @@ export class StartView {
     content.className = 'start-content';
 
     const greeting = this.createGreeting();
-
     const title = document.createElement('h1');
     title.className = 'app-name';
     title.textContent = 'RSS Puzzle';
@@ -43,9 +42,24 @@ export class StartView {
     description.textContent =
       'An interactive game for practicing English sentence construction. Drag and drop words to form sentences from classic literature.';
 
-    content.append(greeting, title, description);
-    this.container.append(content);
+    const startBtn = document.createElement('button');
+    startBtn.className = 'login-button start-game-btn';
+    startBtn.textContent = 'Start Game';
 
+    startBtn.addEventListener('click', () => {
+      this.handleStartGame();
+    });
+
+    content.append(greeting, title, description, startBtn);
+    this.container.append(content);
     document.body.append(this.container);
+  }
+
+  private handleStartGame(): void {
+    document.body.innerHTML = '';
+    //
+    const message = document.createElement('h1');
+    message.textContent = 'The Game Begins Soon!';
+    document.body.append(message);
   }
 }

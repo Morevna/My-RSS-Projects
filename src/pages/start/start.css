@@ -72,3 +72,26 @@
     transform: translateY(0);
   }
 }
+
+.start-game-btn {
+  margin-top: 20px;
+  padding: 15px 50px;
+  font-size: 1.4rem;
+  background-color: #646cff;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(100, 108, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.start-game-btn:hover {
+  background-color: #535bf2;
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.6);
+}
+
+.start-game-btn:active {
+  transform: scale(0.95);
+}
