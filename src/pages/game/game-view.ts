@@ -1,5 +1,6 @@
 import { HeaderView } from '../../components/header/header-view';
 import { getLevelData } from '../../core/data-service';
+import { SentenceCheckModel } from './sentence-check-model';
 import './game.css';
 
 export class GameView {
@@ -7,10 +8,9 @@ export class GameView {
   private resultBlock!: HTMLElement;
   private sourceBlock!: HTMLElement;
   private translationBlock!: HTMLElement;
-  private continueBtn!: HTMLButtonElement;
+  private mainBtn!: HTMLButtonElement;
 
-  private sentences: any[] = [];
-  private currentSentenceIndex = 0;
+  private model: SentenceCheckModel = new SentenceCheckModel();
 
   constructor() {
     this.container = document.createElement('div');
@@ -21,7 +21,7 @@ export class GameView {
 
   private async loadGameData(): Promise<void> {
     const data = await getLevelData(1);
-    this.sentences = data.rounds[0].words;
+    this.model.setSentences(data.rounds[0].words);
     this.renderNewSentence();
   }
 
@@ -39,38 +39,37 @@ export class GameView {
     this.sourceBlock = document.createElement('div');
     this.sourceBlock.className = 'source-block';
 
-    this.continueBtn = document.createElement('button');
-    this.continueBtn.textContent = 'Continue';
-    this.continueBtn.className = 'continue-btn';
-    this.continueBtn.disabled = true;
-    this.continueBtn.onclick = () => this.nextSentence();
+    this.mainBtn = document.createElement('button');
+    this.mainBtn.className = 'game-btn hidden';
+    this.mainBtn.onclick = () => this.handleButtonClick();
 
     this.container.append(
       this.translationBlock,
       this.resultBlock,
       this.sourceBlock,
-      this.continueBtn,
+      this.mainBtn,
     );
     document.body.append(this.container);
   }
 
   private renderNewSentence(): void {
-    const currentData = this.sentences[this.currentSentenceIndex];
+    const currentData = this.model.getCurrentSentence();
     if (!currentData) return;
 
     this.translationBlock.textContent = currentData.textExampleTranslate;
-
     this.resultBlock.innerHTML = '';
     this.sourceBlock.innerHTML = '';
 
-    this.continueBtn.disabled = true;
-    this.continueBtn.classList.remove('btn-active');
+    this.mainBtn.textContent = 'Check';
+    this.mainBtn.classList.add('hidden');
+    this.mainBtn.classList.remove('continue-style');
 
     const words = currentData.textExample.split(' ');
-    const shuffledWords = this.shuffle([...words]);
+    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
 
     shuffledWords.forEach((word) => {
-      this.sourceBlock.append(this.createWordCard(word));
+      const card = this.createWordCard(word);
+      this.sourceBlock.append(card);
     });
   }
 
@@ -80,42 +79,77 @@ export class GameView {
     card.textContent = word;
 
     card.addEventListener('click', () => {
+      this.resetColors();
+      this.resetBtnState();
+
       if (card.parentElement === this.sourceBlock) {
         this.resultBlock.append(card);
       } else {
         this.sourceBlock.append(card);
       }
-      this.checkResult();
+
+      this.updateButtonVisibility();
     });
     return card;
   }
 
-  private checkResult(): void {
-    const currentOriginal =
-      this.sentences[this.currentSentenceIndex].textExample;
-    const currentResult = Array.from(this.resultBlock.children)
-      .map((card) => card.textContent)
-      .join(' ');
-
-    if (currentOriginal === currentResult) {
-      this.continueBtn.disabled = false;
-      this.continueBtn.classList.add('btn-active');
-    } else {
-      this.continueBtn.disabled = true;
-      this.continueBtn.classList.remove('btn-active');
+  private resetBtnState(): void {
+    if (this.mainBtn.textContent === 'Continue') {
+      this.mainBtn.textContent = 'Check';
+      this.mainBtn.classList.remove('continue-style');
     }
   }
 
-  private nextSentence(): void {
-    this.currentSentenceIndex++;
-    if (this.currentSentenceIndex < this.sentences.length) {
+  private updateButtonVisibility(): void {
+    const currentSentence = this.model
+      .getCurrentSentence()
+      .textExample.split(' ');
+    if (this.resultBlock.children.length === currentSentence.length) {
+      this.mainBtn.classList.remove('hidden');
+    } else {
+      this.mainBtn.classList.add('hidden');
+    }
+  }
+
+  private handleButtonClick(): void {
+    if (this.mainBtn.textContent === 'Check') {
+      this.processCheck();
+    } else {
+      this.processNext();
+    }
+  }
+
+  private processCheck(): void {
+    const userWords = Array.from(this.resultBlock.children).map(
+      (c) => c.textContent || '',
+    );
+    const results = this.model.getCheckResults(userWords);
+
+    const cards = Array.from(this.resultBlock.children) as HTMLElement[];
+    let allCorrect = true;
+
+    results.forEach((isCorrect, index) => {
+      cards[index].classList.add(isCorrect ? 'correct' : 'incorrect');
+      if (!isCorrect) allCorrect = false;
+    });
+
+    if (allCorrect) {
+      this.mainBtn.textContent = 'Continue';
+      this.mainBtn.classList.add('continue-style');
+    }
+  }
+
+  private processNext(): void {
+    if (this.model.next()) {
       this.renderNewSentence();
     } else {
       alert('Round Completed!');
     }
   }
 
-  private shuffle(array: string[]): string[] {
-    return array.sort(() => Math.random() - 0.5);
+  private resetColors(): void {
+    Array.from(this.resultBlock.children).forEach((card) => {
+      card.classList.remove('correct', 'incorrect');
+    });
   }
 }
