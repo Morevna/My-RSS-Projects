@@ -72,3 +72,25 @@
   transform: scale(0.9);
   opacity: 0.8;
 }
+
+.continue-btn {
+  padding: 10px 25px;
+  background-color: #444;
+  color: #888;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+}
+
+.continue-btn.btn-active {
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.continue-btn.btn-active:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
