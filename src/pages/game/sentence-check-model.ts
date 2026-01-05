@@ -6,6 +6,7 @@ export class SentenceCheckModel {
 
   public setSentences(sentences: IWord[]): void {
     this.sentences = sentences;
+    this.currentIndex = 0;
   }
 
   public getCurrentSentence(): IWord {
@@ -13,8 +14,10 @@ export class SentenceCheckModel {
   }
 
   public getCheckResults(userWords: string[]): boolean[] {
-    const originalWords = this.getCurrentSentence().textExample.split(' ');
-    return userWords.map((word, index) => word === originalWords[index]);
+    const correctWords = this.getCurrentSentence().textExample.split(' ');
+    return userWords.map(
+      (word: string, index: number) => word === correctWords[index],
+    );
   }
 
   public next(): boolean {

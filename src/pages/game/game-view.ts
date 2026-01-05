@@ -9,6 +9,7 @@ export class GameView {
   private sourceBlock!: HTMLElement;
   private translationBlock!: HTMLElement;
   private mainBtn!: HTMLButtonElement;
+  private dontKnowBtn!: HTMLButtonElement;
 
   private model: SentenceCheckModel = new SentenceCheckModel();
 
@@ -39,15 +40,27 @@ export class GameView {
     this.sourceBlock = document.createElement('div');
     this.sourceBlock.className = 'source-block';
 
+    const controlsContainer = document.createElement('div');
+    controlsContainer.className = 'controls-container';
+
+    this.dontKnowBtn = document.createElement('button');
+    this.dontKnowBtn.className = 'game-btn secondary-btn';
+    this.dontKnowBtn.textContent = "I don't know";
+    this.dontKnowBtn.onclick = () => this.handleDontKnow();
+
     this.mainBtn = document.createElement('button');
-    this.mainBtn.className = 'game-btn hidden';
+    this.mainBtn.className = 'game-btn';
+    this.mainBtn.textContent = 'Check';
+    this.mainBtn.disabled = true;
     this.mainBtn.onclick = () => this.handleButtonClick();
+
+    controlsContainer.append(this.dontKnowBtn, this.mainBtn);
 
     this.container.append(
       this.translationBlock,
       this.resultBlock,
       this.sourceBlock,
-      this.mainBtn,
+      controlsContainer,
     );
     document.body.append(this.container);
   }
@@ -61,13 +74,15 @@ export class GameView {
     this.sourceBlock.innerHTML = '';
 
     this.mainBtn.textContent = 'Check';
-    this.mainBtn.classList.add('hidden');
+    this.mainBtn.disabled = true;
     this.mainBtn.classList.remove('continue-style');
+    this.dontKnowBtn.disabled = false;
+    this.dontKnowBtn.style.display = 'block';
 
-    const words = currentData.textExample.split(' ');
-    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+    const words: string[] = currentData.textExample.split(' ');
+    const shuffledWords: string[] = [...words].sort(() => Math.random() - 0.5);
 
-    shuffledWords.forEach((word) => {
+    shuffledWords.forEach((word: string) => {
       const card = this.createWordCard(word);
       this.sourceBlock.append(card);
     });
@@ -78,37 +93,54 @@ export class GameView {
     card.className = 'word-card';
     card.textContent = word;
 
-    card.addEventListener('click', () => {
+    card.onclick = () => {
+      if (this.mainBtn.textContent === 'Continue') return;
+
       this.resetColors();
-      this.resetBtnState();
+
+      if (this.mainBtn.textContent === 'Continue') {
+        this.mainBtn.textContent = 'Check';
+        this.mainBtn.classList.remove('continue-style');
+      }
 
       if (card.parentElement === this.sourceBlock) {
         this.resultBlock.append(card);
       } else {
         this.sourceBlock.append(card);
       }
-
-      this.updateButtonVisibility();
-    });
+      this.updateCheckButtonStatus();
+    };
     return card;
   }
 
-  private resetBtnState(): void {
-    if (this.mainBtn.textContent === 'Continue') {
-      this.mainBtn.textContent = 'Check';
-      this.mainBtn.classList.remove('continue-style');
+  private updateCheckButtonStatus(): void {
+    const totalWords = this.model
+      .getCurrentSentence()
+      .textExample.split(' ').length;
+    const currentWords = this.resultBlock.children.length;
+
+    if (this.mainBtn.textContent === 'Check') {
+      this.mainBtn.disabled = currentWords !== totalWords;
     }
   }
 
-  private updateButtonVisibility(): void {
-    const currentSentence = this.model
+  private handleDontKnow(): void {
+    const words: string[] = this.model
       .getCurrentSentence()
       .textExample.split(' ');
-    if (this.resultBlock.children.length === currentSentence.length) {
-      this.mainBtn.classList.remove('hidden');
-    } else {
-      this.mainBtn.classList.add('hidden');
-    }
+    this.resultBlock.innerHTML = '';
+    this.sourceBlock.innerHTML = '';
+
+    words.forEach((word: string) => {
+      const card = this.createWordCard(word);
+      card.classList.add('correct');
+      this.resultBlock.append(card);
+    });
+
+    this.mainBtn.textContent = 'Continue';
+    this.mainBtn.disabled = false;
+    this.mainBtn.classList.add('continue-style');
+    this.dontKnowBtn.disabled = true;
   }
 
   private handleButtonClick(): void {
@@ -120,15 +152,14 @@ export class GameView {
   }
 
   private processCheck(): void {
-    const userWords = Array.from(this.resultBlock.children).map(
+    const userWords: string[] = Array.from(this.resultBlock.children).map(
       (c) => c.textContent || '',
     );
-    const results = this.model.getCheckResults(userWords);
-
+    const results: boolean[] = this.model.getCheckResults(userWords);
     const cards = Array.from(this.resultBlock.children) as HTMLElement[];
-    let allCorrect = true;
 
-    results.forEach((isCorrect, index) => {
+    let allCorrect = true;
+    results.forEach((isCorrect: boolean, index: number) => {
       cards[index].classList.add(isCorrect ? 'correct' : 'incorrect');
       if (!isCorrect) allCorrect = false;
     });
@@ -136,6 +167,7 @@ export class GameView {
     if (allCorrect) {
       this.mainBtn.textContent = 'Continue';
       this.mainBtn.classList.add('continue-style');
+      this.dontKnowBtn.disabled = true;
     }
   }
 
@@ -148,7 +180,7 @@ export class GameView {
   }
 
   private resetColors(): void {
-    Array.from(this.resultBlock.children).forEach((card) => {
+    Array.from(this.resultBlock.children).forEach((card: Element) => {
       card.classList.remove('correct', 'incorrect');
     });
   }
