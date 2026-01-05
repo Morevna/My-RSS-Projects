@@ -143,3 +143,20 @@
     font-size: 0.9rem;
   }
 }
+
+.word-card.dragging {
+  opacity: 0.4;
+  transform: scale(1.05);
+  cursor: grabbing;
+}
+
+.result-block.drag-over,
+.source-block.drag-over {
+  border-color: #646cff;
+  background: rgba(100, 108, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.word-card {
+  touch-action: none;
+}
