@@ -9,7 +9,65 @@
   color: white;
 }
 
-/* Блоки для карточек */
+.translation-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  min-height: 45px;
+  width: 100%;
+}
+
+.translation-hint {
+  margin: 0;
+  font-style: italic;
+  color: #aaa;
+  font-size: 1.1rem;
+  text-align: center;
+  transition:
+    filter 0.4s ease,
+    opacity 0.4s ease;
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* */
+.translation-hint.hidden-text {
+  filter: blur(4px);
+  opacity: 0.5;
+  user-select: none;
+  pointer-events: none;
+}
+
+.translate-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #646cff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #646cff;
+  flex-shrink: 0;
+}
+
+.translate-btn.active {
+  background-color: #646cff;
+  color: white;
+  box-shadow: 0 0 10px rgba(100, 108, 255, 0.4);
+}
+
+.translate-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+/**/
 .result-block,
 .source-block {
   display: flex;
@@ -24,6 +82,9 @@
   border: 2px dashed #444;
   align-content: flex-start;
   box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .result-block {
@@ -34,16 +95,13 @@
   background: rgba(100, 108, 255, 0.1);
 }
 
-.translation-hint {
-  font-style: italic;
-  color: #aaa;
-  min-height: 1.5em;
-  margin-bottom: 20px;
-  text-align: center;
-  padding: 0 20px;
+.result-block.drag-over,
+.source-block.drag-over {
+  border-color: #646cff;
+  background: rgba(100, 108, 255, 0.2);
 }
 
-/* Карточки слов */
+/*  */
 .word-card {
   display: inline-flex;
   align-items: center;
@@ -56,14 +114,24 @@
   cursor: pointer;
   transition:
     transform 0.2s,
-    background-color 0.2s;
+    background-color 0.2s,
+    opacity 0.2s;
   user-select: none;
+  touch-action: none;
 }
 
 .word-card:hover {
   background-color: #747bff;
+  transform: translateY(-2px);
 }
 
+.word-card.dragging {
+  opacity: 0.4;
+  transform: scale(1.05);
+  cursor: grabbing;
+}
+
+/* проверки */
 .word-card.correct {
   background-color: #4caf50 !important;
   cursor: default;
@@ -73,7 +141,7 @@
   background-color: #f44336 !important;
 }
 
-/* --- КНОПКИ --- */
+/**/
 .controls-container {
   display: flex;
   justify-content: center;
@@ -91,16 +159,13 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   min-width: 150px;
-}
-
-/*Check*/
-.game-btn {
   background-color: #646cff;
   color: white;
 }
 
 .game-btn:hover:not(:disabled) {
   background-color: #535bf2;
+  box-shadow: 0 4px 12px rgba(83, 91, 242, 0.3);
 }
 
 .game-btn:disabled {
@@ -110,7 +175,6 @@
   opacity: 0.7;
 }
 
-/**/
 .secondary-btn {
   background-color: #f39c12;
 }
@@ -138,25 +202,13 @@
     align-items: center;
   }
 
+  .translation-container {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
   .word-card {
     padding: 8px 12px;
     font-size: 0.9rem;
   }
-}
-
-.word-card.dragging {
-  opacity: 0.4;
-  transform: scale(1.05);
-  cursor: grabbing;
-}
-
-.result-block.drag-over,
-.source-block.drag-over {
-  border-color: #646cff;
-  background: rgba(100, 108, 255, 0.2);
-  transition: all 0.2s ease;
-}
-
-.word-card {
-  touch-action: none;
 }
