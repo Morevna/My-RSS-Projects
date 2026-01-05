@@ -15,10 +15,15 @@ export class StartView {
     greeting.className = 'user-greeting';
 
     const rawData = localStorage.getItem('rss-puzzle-user');
-
     if (rawData) {
-      const user = JSON.parse(rawData);
-      greeting.textContent = `Hello, ${user.firstName} ${user.surname}!`;
+      try {
+        const user = JSON.parse(rawData);
+        greeting.textContent = `Hello, ${user.firstName} ${user.surname}!`;
+      } catch {
+        greeting.textContent = 'Hello!';
+      }
+    } else {
+      greeting.textContent = 'Hello!';
     }
 
     return greeting;
@@ -29,11 +34,12 @@ export class StartView {
 
     const header = new HeaderView();
     document.body.append(header.getElement());
-    //
+
     const content = document.createElement('div');
     content.className = 'start-content';
 
     const greeting = this.createGreeting();
+
     const title = document.createElement('h1');
     title.className = 'app-name';
     title.textContent = 'RSS Puzzle';
@@ -57,7 +63,6 @@ export class StartView {
   }
 
   private handleStartGame(): void {
-    const gamePage = new GameView();
-    gamePage.draw();
+    new GameView();
   }
 }
