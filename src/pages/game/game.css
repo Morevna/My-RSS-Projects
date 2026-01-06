@@ -212,3 +212,53 @@
     font-size: 0.9rem;
   }
 }
+
+.audio-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #2ecc71;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #2ecc71;
+  flex-shrink: 0;
+}
+
+.audio-btn:hover {
+  background-color: #2ecc71;
+  color: white;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+}
+
+.audio-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.audio-btn.playing {
+  background-color: #4caf50;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+}
+
+.audio-btn.playing .audio-icon {
+  animation: pulse-audio 0.8s infinite;
+}
+
+@keyframes pulse-audio {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

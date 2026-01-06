@@ -4,6 +4,7 @@ import { SentenceCheckModel } from './sentence-check-model';
 import { CheckButton } from '../../components/check-button';
 import { TranslateButton } from '../../components/translate-button';
 import { DontKnowButton } from '../../components/dont-know-button';
+import { AudioButton } from '../../components/audio-button';
 import { DragAndDrop } from './drag-drop';
 import './game.css';
 
@@ -18,6 +19,7 @@ export class GameView {
   private model: SentenceCheckModel = new SentenceCheckModel();
   private checkButton!: CheckButton;
   private translateButton!: TranslateButton;
+  private audioButton!: AudioButton;
   private dragDrop!: DragAndDrop;
 
   constructor() {
@@ -47,30 +49,28 @@ export class GameView {
     this.translateButton = new TranslateButton(() =>
       this.updateTranslationVisibility(),
     );
+    this.audioButton = new AudioButton();
 
     translationWrapper.append(
+      this.audioButton.getElement(),
       this.translationBlock,
       this.translateButton.getElement(),
     );
 
     this.resultBlock = document.createElement('div');
     this.resultBlock.className = 'result-block';
-
     this.sourceBlock = document.createElement('div');
     this.sourceBlock.className = 'source-block';
 
     const controlsContainer = document.createElement('div');
     controlsContainer.className = 'controls-container';
-
     this.dontKnowBtn = document.createElement('button');
     this.dontKnowBtn.className = 'game-btn secondary-btn';
     this.dontKnowBtn.textContent = "I don't know";
-
     this.mainBtn = document.createElement('button');
     this.mainBtn.className = 'game-btn';
 
     controlsContainer.append(this.dontKnowBtn, this.mainBtn);
-
     this.container.append(
       translationWrapper,
       this.resultBlock,
@@ -94,9 +94,12 @@ export class GameView {
       this.checkButton,
     );
 
-    this.dragDrop = new DragAndDrop(this.sourceBlock, this.resultBlock, () => {
-      this.checkButton.updateStatus();
+    this.dontKnowBtn.addEventListener('click', () => {
       this.updateTranslationVisibility();
+    });
+
+    this.dragDrop = new DragAndDrop(this.sourceBlock, this.resultBlock, () => {
+      this.onStateChange();
     });
 
     this.mainBtn.addEventListener('nextSentence', () =>
@@ -104,11 +107,16 @@ export class GameView {
     );
   }
 
+  private onStateChange(): void {
+    this.checkButton.updateStatus();
+    this.updateTranslationVisibility();
+  }
+
   private updateTranslationVisibility(): void {
     const isToggledVisible = this.translateButton.getVisibility();
-    const isCorrectOrder = this.mainBtn.textContent === 'Continue';
+    const isFinished = this.mainBtn.textContent === 'Continue';
 
-    if (isToggledVisible || isCorrectOrder) {
+    if (isToggledVisible || isFinished) {
       this.translationBlock.classList.remove('hidden-text');
     } else {
       this.translationBlock.classList.add('hidden-text');
@@ -120,9 +128,11 @@ export class GameView {
     if (!currentData) return;
 
     this.translationBlock.textContent = currentData.textExampleTranslate;
+
+    this.audioButton.setAudio(currentData.audioExample);
+
     this.resultBlock.innerHTML = '';
     this.sourceBlock.innerHTML = '';
-
     this.updateTranslationVisibility();
 
     const words = currentData.textExample.split(' ');
@@ -133,7 +143,6 @@ export class GameView {
       this.sourceBlock.appendChild(card);
       this.dragDrop.makeDraggable(card);
     });
-
     this.checkButton.updateStatus();
   }
 
@@ -145,16 +154,12 @@ export class GameView {
     card.onclick = () => {
       if (this.mainBtn.textContent === 'Continue') return;
 
-      if (card.parentElement === this.sourceBlock) {
-        this.resultBlock.appendChild(card);
-      } else {
-        this.sourceBlock.appendChild(card);
-      }
+      card.parentElement === this.sourceBlock
+        ? this.resultBlock.appendChild(card)
+        : this.sourceBlock.appendChild(card);
 
-      this.checkButton.updateStatus();
-      this.updateTranslationVisibility();
+      this.onStateChange();
     };
-
     return card;
   }
 }
