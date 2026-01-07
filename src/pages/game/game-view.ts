@@ -5,6 +5,7 @@ import { CheckButton } from '../../components/check-button';
 import { TranslateButton } from '../../components/translate-button';
 import { DontKnowButton } from '../../components/dont-know-button';
 import { AudioButton } from '../../components/audio-button';
+import { VisibleAudioButton } from '../../components/visiblle-audio-button';
 import { DragAndDrop } from './drag-drop';
 import './game.css';
 
@@ -16,10 +17,11 @@ export class GameView {
   private mainBtn!: HTMLButtonElement;
   private dontKnowBtn!: HTMLButtonElement;
 
-  private model: SentenceCheckModel = new SentenceCheckModel();
+  private model = new SentenceCheckModel();
   private checkButton!: CheckButton;
   private translateButton!: TranslateButton;
   private audioButton!: AudioButton;
+  private audioTumbler!: VisibleAudioButton;
   private dragDrop!: DragAndDrop;
 
   constructor() {
@@ -51,7 +53,15 @@ export class GameView {
     );
     this.audioButton = new AudioButton();
 
+    this.audioTumbler = new VisibleAudioButton((isActive) => {
+      if (!isActive) {
+        this.audioButton.stop();
+      }
+      this.updateAudioVisibility();
+    });
+
     translationWrapper.append(
+      this.audioTumbler.getElement(),
       this.audioButton.getElement(),
       this.translationBlock,
       this.translateButton.getElement(),
@@ -64,9 +74,11 @@ export class GameView {
 
     const controlsContainer = document.createElement('div');
     controlsContainer.className = 'controls-container';
+
     this.dontKnowBtn = document.createElement('button');
     this.dontKnowBtn.className = 'game-btn secondary-btn';
     this.dontKnowBtn.textContent = "I don't know";
+
     this.mainBtn = document.createElement('button');
     this.mainBtn.className = 'game-btn';
 
@@ -94,13 +106,13 @@ export class GameView {
       this.checkButton,
     );
 
-    this.dontKnowBtn.addEventListener('click', () => {
-      this.updateTranslationVisibility();
-    });
+    this.dontKnowBtn.addEventListener('click', () =>
+      this.updateTranslationVisibility(),
+    );
 
-    this.dragDrop = new DragAndDrop(this.sourceBlock, this.resultBlock, () => {
-      this.onStateChange();
-    });
+    this.dragDrop = new DragAndDrop(this.sourceBlock, this.resultBlock, () =>
+      this.onStateChange(),
+    );
 
     this.mainBtn.addEventListener('nextSentence', () =>
       this.renderNewSentence(),
@@ -109,18 +121,36 @@ export class GameView {
 
   private onStateChange(): void {
     this.checkButton.updateStatus();
+
+    if (this.mainBtn.textContent === 'Continue') {
+      this.resultBlock.querySelectorAll('.word-card').forEach((card) => {
+        card.classList.remove('incorrect');
+        card.classList.add('correct');
+      });
+    }
+
     this.updateTranslationVisibility();
+    this.updateAudioVisibility();
+  }
+
+  private updateAudioVisibility(): void {
+    const isFinished = this.mainBtn.textContent === 'Continue';
+    const isEnabled = this.audioTumbler.isActive;
+
+    const shouldShow = isEnabled || isFinished;
+    this.audioButton.getElement().classList.toggle('hidden-hint', !shouldShow);
+
+    if (!isEnabled) {
+      this.audioButton.stop();
+    }
   }
 
   private updateTranslationVisibility(): void {
-    const isToggledVisible = this.translateButton.getVisibility();
-    const isFinished = this.mainBtn.textContent === 'Continue';
+    const isVisible =
+      this.translateButton.getVisibility() ||
+      this.mainBtn.textContent === 'Continue';
 
-    if (isToggledVisible || isFinished) {
-      this.translationBlock.classList.remove('hidden-text');
-    } else {
-      this.translationBlock.classList.add('hidden-text');
-    }
+    this.translationBlock.classList.toggle('hidden-text', !isVisible);
   }
 
   private renderNewSentence(): void {
@@ -133,7 +163,9 @@ export class GameView {
 
     this.resultBlock.innerHTML = '';
     this.sourceBlock.innerHTML = '';
+
     this.updateTranslationVisibility();
+    this.updateAudioVisibility();
 
     const words = currentData.textExample.split(' ');
     const shuffledWords = [...words].sort(() => Math.random() - 0.5);
@@ -143,6 +175,7 @@ export class GameView {
       this.sourceBlock.appendChild(card);
       this.dragDrop.makeDraggable(card);
     });
+
     this.checkButton.updateStatus();
   }
 
@@ -153,13 +186,14 @@ export class GameView {
 
     card.onclick = () => {
       if (this.mainBtn.textContent === 'Continue') return;
-
-      card.parentElement === this.sourceBlock
-        ? this.resultBlock.appendChild(card)
-        : this.sourceBlock.appendChild(card);
-
+      const target =
+        card.parentElement === this.sourceBlock
+          ? this.resultBlock
+          : this.sourceBlock;
+      target.appendChild(card);
       this.onStateChange();
     };
+
     return card;
   }
 }

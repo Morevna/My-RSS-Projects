@@ -34,7 +34,7 @@ export class TranslateButton {
       </svg>`;
 
     this.element.innerHTML = this.isVisible ? eyeOpen : eyeClosed;
-    this.element.title = this.isVisible ? 'Скрыть перевод' : 'Показать перевод';
+    this.element.title = this.isVisible ? 'close translate' : 'open translate';
   }
 
   public getElement(): HTMLButtonElement {

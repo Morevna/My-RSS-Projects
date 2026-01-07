@@ -19,6 +19,9 @@ export class AudioButton {
 
   public setAudio(audioPath: string): void {
     const fullUrl = `${DATA_URL}${audioPath}`;
+
+    this.stop();
+
     this.audio = new Audio(fullUrl);
 
     this.audio.onended = () => {
@@ -27,14 +30,23 @@ export class AudioButton {
   }
 
   public play(): void {
-    if (this.audio) {
-      this.element.classList.add('playing');
-      this.audio.currentTime = 0;
-      this.audio.play().catch((err) => {
-        console.error('error audio:', err);
-        this.element.classList.remove('playing');
-      });
-    }
+    if (!this.audio) return;
+
+    this.element.classList.add('playing');
+    this.audio.currentTime = 0;
+
+    this.audio.play().catch((err) => {
+      console.error('error audio:', err);
+      this.element.classList.remove('playing');
+    });
+  }
+
+  public stop(): void {
+    if (!this.audio) return;
+
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.element.classList.remove('playing');
   }
 
   public getElement(): HTMLButtonElement {
