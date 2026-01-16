@@ -1,24 +1,22 @@
-// state/state.ts
-
-export interface Car {
+export type Car = {
   id: number;
   name: string;
   color: string;
-}
+};
 
-export interface Winner {
+export type Winner = {
   id: number;
   wins: number;
   time: number;
-}
+};
 
-export interface AppState {
+export type AppState = {
   currentView: 'garage' | 'winners';
   garagePage: number;
   winnersPage: number;
   cars: Car[];
   winners: Winner[];
-}
+};
 
 export const state: AppState = {
   currentView: 'garage',
