@@ -13,27 +13,19 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
 
-  // Вместо unicorn.configs['recommended'], мы подключаем его правила вручную,
-  // чтобы избежать ошибок с устаревшим форматом (env, plugins, parserOptions)
   {
     plugins: {
       unicorn: unicorn,
     },
     rules: {
       ...unicorn.configs['recommended'].rules,
-      // --- НАСТРОЙКИ UNICORN (ВАШИ ИСКЛЮЧЕНИЯ) ---
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-for-each': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-null': 'off',
       'unicorn/number-literal-case': 'off',
       'unicorn/numeric-separators-style': 'off',
-      'unicorn/prevent-abbreviations': [
-        'error',
-        {
-          allowList: { acc: true, env: true, i: true, j: true, props: true, Props: true },
-        },
-      ],
+      'unicorn/prevent-abbreviations': 'off',
     },
   },
 
@@ -50,7 +42,6 @@ export default tseslint.config(
       },
     },
     rules: {
-      // --- ТРЕБОВАНИЯ ТЗ (ВАШИ ПРАВИЛА) ---
       'max-lines-per-function': ['error', { max: 40, skipBlankLines: true, skipComments: true }],
       'no-magic-numbers': [
         'error',

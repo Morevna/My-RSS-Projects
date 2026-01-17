@@ -1,3 +1,4 @@
+// src/state/state.ts
 export type Car = {
   id: number;
   name: string;

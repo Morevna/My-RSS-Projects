@@ -1,7 +1,8 @@
+// src/components/navigation.ts
 import { state } from '../state/state';
 
 export function createNavigation(onNavigate: () => void): HTMLElement {
-  const nav = document.createElement('div');
+  const nav = document.createElement('nav');
 
   const garageButton = document.createElement('button');
   garageButton.textContent = 'TO GARAGE';

@@ -1,3 +1,4 @@
+//src/main.ts
 import { state } from './state/state';
 import { renderGarage } from './views/garage';
 import { renderWinners } from './views/winners';
@@ -15,7 +16,6 @@ function renderApp(): void {
   if (state.currentView === 'garage') {
     renderGarage(root);
   }
-
   if (state.currentView === 'winners') {
     renderWinners(root);
   }
