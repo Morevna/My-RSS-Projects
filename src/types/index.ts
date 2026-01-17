@@ -18,6 +18,7 @@ export type AppState = {
   cars: Car[];
   winners: Winner[];
   carsCount: number;
+  selectedCar: Car | null;
 };
 
 export type GarageHandlers = {

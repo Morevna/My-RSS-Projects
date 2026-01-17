@@ -1,5 +1,6 @@
 import { state } from './state/state';
 import { renderGarage } from './views/garage';
+import { renderWinners } from './views/winners';
 import { createNavigation } from './components/navigation';
 import { initHandlers } from './handlers/garage-handlers';
 import { getCars } from './api/garage';
@@ -23,7 +24,7 @@ function renderApp(): void {
   if (state.currentView === 'garage') {
     renderGarage(viewContainer, handlers);
   } else {
-    viewContainer.innerHTML = '<h1>Winners View</h1>';
+    renderWinners(viewContainer);
   }
 }
 

@@ -1,7 +1,9 @@
 import { state } from '../state/state';
-import { getCars, createCar, deleteCar } from '../api/garage';
+import { getCars, createCar, deleteCar, updateCar } from '../api/garage';
 import { generateRandomCarName, getRandomColor } from '../data/car-names';
-import { GarageHandlers, Car } from '../types';
+import { GarageHandlers, Car } from '../types/index';
+const PAGE_NEXT = 1;
+const PAGE_PREV = -1;
 
 let refreshApp: () => void;
 
@@ -10,6 +12,30 @@ const updateState = async (): Promise<void> => {
   state.cars = items;
   state.carsCount = count;
   refreshApp();
+};
+
+const handleCreate = async (name: string, color: string): Promise<void> => {
+  await createCar(name, color);
+  await updateState();
+};
+
+const handleRemove = async (id: number): Promise<void> => {
+  await deleteCar(id);
+  await updateState();
+};
+
+const handleUpdate = async (name: string, color: string): Promise<void> => {
+  if (state.selectedCar) {
+    await updateCar(state.selectedCar.id, name, color);
+    state.selectedCar = null;
+    await updateState();
+  }
+};
+
+const handlePagination = async (direction: number): Promise<void> => {
+  state.garagePage += direction;
+  localStorage.setItem('garagePage', String(state.garagePage));
+  await updateState();
 };
 
 const handleGenerate = async (): Promise<void> => {
@@ -24,40 +50,19 @@ export const initHandlers = (renderCallback: () => void): GarageHandlers => {
   refreshApp = renderCallback;
 
   return {
-    onCreate: async (name: string, color: string): Promise<void> => {
-      await createCar(name, color);
-      await updateState();
-    },
-    onRemove: async (id: number): Promise<void> => {
-      await deleteCar(id);
-      await updateState();
-    },
-    onNext: async (): Promise<void> => {
-      state.garagePage += 1;
-      await updateState();
-    },
-    onPrev: async (): Promise<void> => {
-      state.garagePage -= 1;
-      await updateState();
-    },
+    onCreate: handleCreate,
+    onRemove: handleRemove,
+    onUpdate: handleUpdate,
+    onNext: () => handlePagination(PAGE_NEXT),
+    onPrev: () => handlePagination(PAGE_PREV),
     onGenerate: handleGenerate,
-    onUpdate: async (n: string, c: string): Promise<void> => {
-      console.log(n, c);
-    },
-    onRace: (): void => {
-      console.log('Race');
-    },
-    onReset: (): void => {
-      console.log('Reset');
-    },
     onSelectCar: (car: Car): void => {
-      console.log(car);
+      state.selectedCar = car;
+      refreshApp();
     },
-    onEngineStart: async (id: number): Promise<void> => {
-      console.log(id);
-    },
-    onEngineStop: async (id: number): Promise<void> => {
-      console.log(id);
-    },
+    onRace: (): void => console.log('Race'),
+    onReset: (): void => console.log('Reset'),
+    onEngineStart: async (id: number): Promise<void> => console.log('Start', id),
+    onEngineStop: async (id: number): Promise<void> => console.log('Stop', id),
   };
 };
