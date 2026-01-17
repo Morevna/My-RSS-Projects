@@ -1,4 +1,3 @@
-// src/components/navigation.ts
 import { state } from '../state/state';
 
 export function createNavigation(onNavigate: () => void): HTMLElement {
@@ -10,12 +9,12 @@ export function createNavigation(onNavigate: () => void): HTMLElement {
   const winnersButton = document.createElement('button');
   winnersButton.textContent = 'TO WINNERS';
 
-  garageButton.addEventListener('click', () => {
+  garageButton.addEventListener('click', (): void => {
     state.currentView = 'garage';
     onNavigate();
   });
 
-  winnersButton.addEventListener('click', () => {
+  winnersButton.addEventListener('click', (): void => {
     state.currentView = 'winners';
     onNavigate();
   });

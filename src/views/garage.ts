@@ -1,77 +1,110 @@
 // src/views/garage.ts
-import { state, Car } from '../state/state';
-import { getCars } from '../api/garage';
-import './garage.css';
+import { state } from '../state/state';
+import { Car, GarageHandlers } from '../types';
 import carSVGText from '../assets/car.svg?raw';
-const CARS_PER_PAGE = 7;
 
-function renderGarageSkeleton(container: HTMLElement): void {
-  container.innerHTML = `
-    <h1>Garage</h1>
-    <h2 id="total-count"></h2>
-    <span id="page-info"></span>
-    <div id="cars-list" class="cars-list"></div>
-    <div class="pagination">
-      <button id="prev-btn">Previous</button>
-      <button id="next-btn">Next</button>
-    </div>
-  `;
-}
+function createControls(handlers: GarageHandlers): HTMLElement {
+  const container = document.createElement('div');
+  container.id = 'controls-block';
 
-// Отрисовка машины
-function renderCar(car: Car): HTMLDivElement {
-  const carItem = document.createElement('div');
-  carItem.className = 'car-item';
-  carItem.innerHTML = carSVGText;
-
-  carItem.querySelectorAll<SVGElement>('path').forEach((path) => {
-    path.setAttribute('fill', car.color);
+  const createGroup = document.createElement('div');
+  createGroup.className = 'input-group';
+  const nameInput = document.createElement('input');
+  nameInput.id = 'create-name';
+  nameInput.placeholder = 'Car name...';
+  const colorInput = document.createElement('input');
+  colorInput.type = 'color';
+  colorInput.id = 'create-color';
+  colorInput.value = '#e67e22';
+  const createBtn = document.createElement('button');
+  createBtn.textContent = 'CREATE';
+  createBtn.addEventListener('click', (): void => {
+    if (nameInput.value) {
+      handlers.onCreate(nameInput.value, colorInput.value);
+      nameInput.value = '';
+    }
   });
+  createGroup.append(nameInput, colorInput, createBtn);
 
-  const label = document.createElement('p');
-  label.textContent = `${car.name}`;
-  carItem.append(label);
+  const actionGroup = document.createElement('div');
+  actionGroup.className = 'input-group';
+  const genBtn = document.createElement('button');
+  genBtn.textContent = 'GENERATE 100 CARS';
+  genBtn.addEventListener('click', (): void => {
+    handlers.onGenerate();
+  });
+  actionGroup.append(genBtn);
 
-  return carItem;
+  container.append(createGroup, actionGroup);
+  return container;
 }
 
-// Настройка кнопок пагинации
-function setupPagination(container: HTMLElement, totalPages: number): void {
-  const prevBtn = container.querySelector('#prev-btn') as HTMLButtonElement;
-  const nextBtn = container.querySelector('#next-btn') as HTMLButtonElement;
-  const pageInfo = container.querySelector('#page-info') as HTMLElement;
+function createPagination(handlers: GarageHandlers): HTMLElement {
+  const pagination = document.createElement('div');
+  pagination.id = 'pagination';
 
-  prevBtn.disabled = state.garagePage === 1;
-  nextBtn.disabled = state.garagePage >= totalPages;
-  pageInfo.textContent = `Page #${state.garagePage}`;
-
+  const prevBtn = document.createElement('button');
+  prevBtn.textContent = 'PREV';
+  prevBtn.disabled = state.garagePage <= 1;
   prevBtn.addEventListener('click', (): void => {
-    state.garagePage--;
-    renderGarage(container);
+    handlers.onPrev();
   });
 
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = 'NEXT';
+  const totalPages = Math.ceil(state.carsCount / 7);
+  nextBtn.disabled = state.garagePage >= totalPages || state.carsCount === 0;
   nextBtn.addEventListener('click', (): void => {
-    state.garagePage++;
-    renderGarage(container);
+    handlers.onNext();
   });
+
+  pagination.append(prevBtn, nextBtn);
+  return pagination;
 }
 
-// Главная функция
-export async function renderGarage(container: HTMLElement): Promise<void> {
-  const { cars, totalCount }: { cars: Car[]; totalCount: number } = await getCars(
-    state.garagePage,
-    CARS_PER_PAGE,
+function createCarItem(car: Car, handlers: GarageHandlers): HTMLDivElement {
+  const item = document.createElement('div');
+  item.className = 'car-track';
+  const controlPanel = document.createElement('div');
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'REMOVE';
+  removeBtn.addEventListener('click', (): void => {
+    handlers.onRemove(car.id);
+  });
+
+  const carName = document.createElement('span');
+  carName.className = 'car-name';
+  carName.textContent = car.name;
+
+  const svgWrapper = document.createElement('div');
+  svgWrapper.className = 'car-svg';
+  svgWrapper.innerHTML = carSVGText;
+  const svg = svgWrapper.querySelector('svg');
+  if (svg) svg.style.fill = car.color;
+
+  controlPanel.append(removeBtn, carName);
+  item.append(controlPanel, svgWrapper);
+  return item;
+}
+
+export function renderGarage(container: HTMLElement, handlers: GarageHandlers): void {
+  container.innerHTML = '';
+
+  const title = document.createElement('h1');
+  title.textContent = `Garage (${state.carsCount})`;
+  const pageTitle = document.createElement('h2');
+  pageTitle.textContent = `Page #${state.garagePage}`;
+
+  const garageList = document.createElement('div');
+  garageList.id = 'garage-list';
+  state.cars.forEach((car) => garageList.append(createCarItem(car, handlers)));
+
+  container.append(
+    createControls(handlers),
+    title,
+    pageTitle,
+    garageList,
+    createPagination(handlers),
   );
-
-  state.cars = cars;
-  const totalPages = Math.ceil(totalCount / CARS_PER_PAGE);
-
-  renderGarageSkeleton(container);
-
-  container.querySelector('#total-count')!.textContent = `Total cars: ${totalCount}`;
-
-  const carsList = container.querySelector('#cars-list')!;
-  cars.forEach((car) => carsList.append(renderCar(car)));
-
-  setupPagination(container, totalPages);
 }

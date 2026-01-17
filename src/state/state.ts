@@ -1,23 +1,5 @@
 // src/state/state.ts
-export type Car = {
-  id: number;
-  name: string;
-  color: string;
-};
-
-export type Winner = {
-  id: number;
-  wins: number;
-  time: number;
-};
-
-export type AppState = {
-  currentView: 'garage' | 'winners';
-  garagePage: number;
-  winnersPage: number;
-  cars: Car[];
-  winners: Winner[];
-};
+import { AppState } from '../types';
 
 export const state: AppState = {
   currentView: 'garage',
@@ -25,4 +7,5 @@ export const state: AppState = {
   winnersPage: 1,
   cars: [],
   winners: [],
+  carsCount: 0,
 };
