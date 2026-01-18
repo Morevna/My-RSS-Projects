@@ -1,14 +1,22 @@
 import { state } from '../state/state';
-import { getCars, createCar, deleteCar, updateCar } from '../api/garage';
+import { getCars, createCar, deleteCar, updateCar, stopEngine } from '../api/garage';
+import { animateCar, resetAnimation } from '../utils/animation';
 import { generateRandomCarName, getRandomColor } from '../data/car-names';
 import { GarageHandlers, Car } from '../types/index';
 const PAGE_NEXT = 1;
 const PAGE_PREV = -1;
+const CARS_PER_PAGE = 7;
 
 let refreshApp: () => void;
 
 const updateState = async (): Promise<void> => {
   const { items, count } = await getCars(state.garagePage);
+  if (items.length === 0 && count > 0 && state.garagePage > 1) {
+    state.garagePage = Math.ceil(count / CARS_PER_PAGE);
+    localStorage.setItem('garagePage', String(state.garagePage));
+    await updateState();
+    return;
+  }
   state.cars = items;
   state.carsCount = count;
   refreshApp();
@@ -62,7 +70,12 @@ export const initHandlers = (renderCallback: () => void): GarageHandlers => {
     },
     onRace: (): void => console.log('Race'),
     onReset: (): void => console.log('Reset'),
-    onEngineStart: async (id: number): Promise<void> => console.log('Start', id),
-    onEngineStop: async (id: number): Promise<void> => console.log('Stop', id),
+    onEngineStart: async (id: number): Promise<void> => {
+      await animateCar(id);
+    },
+    onEngineStop: async (id: number): Promise<void> => {
+      await stopEngine(id);
+      resetAnimation(id);
+    },
   };
 };

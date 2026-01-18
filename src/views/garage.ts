@@ -91,6 +91,7 @@ function createControls(handlers: GarageHandlers): HTMLElement {
 function createCarItem(car: Car, handlers: GarageHandlers): HTMLDivElement {
   const item = document.createElement('div');
   item.className = 'car-track';
+  item.dataset.id = car.id.toString();
 
   const controlPanel = document.createElement('div');
   controlPanel.className = 'car-controls';
