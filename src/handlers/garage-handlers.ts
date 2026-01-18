@@ -68,8 +68,21 @@ export const initHandlers = (renderCallback: () => void): GarageHandlers => {
       state.selectedCar = car;
       refreshApp();
     },
-    onRace: (): void => console.log('Race'),
-    onReset: (): void => console.log('Reset'),
+    onRace: async (): Promise<void> => {
+      const carElements = document.querySelectorAll('.car-track');
+      const ids = [...carElements].map((el) => Number((el as HTMLElement).dataset.id));
+      await Promise.all(ids.map((id) => animateCar(id)));
+    },
+    onReset: async (): Promise<void> => {
+      const carElements = document.querySelectorAll('.car-track');
+      const ids = [...carElements].map((el) => Number((el as HTMLElement).dataset.id));
+      await Promise.all(
+        ids.map(async (id) => {
+          await stopEngine(id);
+          resetAnimation(id);
+        }),
+      );
+    },
     onEngineStart: async (id: number): Promise<void> => {
       await animateCar(id);
     },
