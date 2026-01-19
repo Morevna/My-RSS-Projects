@@ -16,5 +16,8 @@ export const state: AppState = {
   cars: [],
   winners: [],
   carsCount: 0,
+  winnersCount: 0,
   selectedCar: null,
+  sort: 'wins',
+  order: 'ASC',
 };

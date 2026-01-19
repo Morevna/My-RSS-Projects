@@ -18,7 +18,10 @@ export type AppState = {
   cars: Car[];
   winners: Winner[];
   carsCount: number;
+  winnersCount: number;
   selectedCar: Car | null;
+  sort: 'wins' | 'time' | null;
+  order: 'ASC' | 'DESC' | null;
 };
 
 export type GarageHandlers = {
@@ -33,4 +36,7 @@ export type GarageHandlers = {
   onPrev: () => void;
   onNext: () => void;
   onGenerate: () => Promise<void>;
+  onWinnersNext: () => void;
+  onWinnersPrev: () => void;
+  onSort: (sortType: 'wins' | 'time') => void;
 };

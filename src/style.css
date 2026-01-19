@@ -111,7 +111,7 @@ button:disabled {
 .car-track::after {
   content: '';
   position: absolute;
-  right: 60px;
+  right: 75px;
   top: 0;
   bottom: 0;
   width: 4px;
@@ -123,7 +123,7 @@ button:disabled {
 .car-track::before {
   content: '🏁';
   position: absolute;
-  right: 52px;
+  right: 65px;
   top: -2px;
   font-size: 16px;
   z-index: 3;
