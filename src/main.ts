@@ -2,8 +2,7 @@ import { state } from './state/state';
 import { renderGarage } from './views/garage';
 import { renderWinners } from './views/winners';
 import { createNavigation } from './components/navigation';
-import { initHandlers } from './handlers/garage-handlers';
-import { getCars } from './api/garage';
+import { initHandlers, updateState, updateWinnersState } from './handlers/garage-handlers';
 import './style.css';
 
 const appContainer = document.createElement('div');
@@ -15,24 +14,21 @@ const handlers = initHandlers(renderApp);
 function renderApp(): void {
   appContainer.innerHTML = '';
 
-  const nav = createNavigation(renderApp);
+  const nav = createNavigation(() => {
+    (state.currentView === 'garage' ? updateState : updateWinnersState)().catch(console.error);
+  });
+
   appContainer.append(nav);
 
   const viewContainer = document.createElement('div');
   appContainer.append(viewContainer);
 
-  if (state.currentView === 'garage') {
-    renderGarage(viewContainer, handlers);
-  } else {
-    renderWinners(viewContainer, handlers);
-  }
+  (state.currentView === 'garage' ? renderGarage : renderWinners)(viewContainer, handlers);
 }
 
 try {
-  const { items, count } = await getCars(state.garagePage);
-  state.cars = items;
-  state.carsCount = count;
-  renderApp();
+  await (state.currentView === 'garage' ? updateState : updateWinnersState)();
 } catch (error) {
   console.error('Failed to load app:', error);
+  renderApp();
 }

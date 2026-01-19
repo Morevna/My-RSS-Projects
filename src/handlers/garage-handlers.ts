@@ -21,7 +21,7 @@ const WINNERS_PER_PAGE = 10;
 let refreshApp: () => void;
 
 // Helpers, State Update
-const updateWinnersState = async (): Promise<void> => {
+export const updateWinnersState = async (): Promise<void> => {
   const { items, count } = await getWinners(
     state.winnersPage,
     state.sort,
@@ -35,7 +35,7 @@ const updateWinnersState = async (): Promise<void> => {
   refreshApp();
 };
 
-const updateState = async (): Promise<void> => {
+export const updateState = async (): Promise<void> => {
   const { items, count } = await getCars(state.garagePage);
   if (items.length === 0 && count > 0 && state.garagePage > 1) {
     state.garagePage = Math.ceil(count / 7);
