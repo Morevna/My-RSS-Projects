@@ -9,8 +9,16 @@ const getInitialPage = (): number => {
   return 1;
 };
 
+const getInitialView = (): 'garage' | 'winners' => {
+  const saved = localStorage.getItem('currentView');
+  if (saved === 'garage' || saved === 'winners') {
+    return saved;
+  }
+  return 'garage';
+};
+
 export const state: AppState = {
-  currentView: 'garage',
+  currentView: getInitialView(),
   garagePage: getInitialPage(),
   winnersPage: 1,
   cars: [],

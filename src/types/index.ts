@@ -11,6 +11,11 @@ export type Winner = {
   time: number;
 };
 
+export type GetWinnersResponse = {
+  items: Winner[];
+  count: number;
+};
+
 export type AppState = {
   currentView: 'garage' | 'winners';
   garagePage: number;

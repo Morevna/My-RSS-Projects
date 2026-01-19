@@ -24,7 +24,7 @@ function renderApp(): void {
   if (state.currentView === 'garage') {
     renderGarage(viewContainer, handlers);
   } else {
-    renderWinners(viewContainer);
+    renderWinners(viewContainer, handlers);
   }
 }
 
