@@ -39,8 +39,8 @@ function createTableHead(handlers: GarageHandlers): HTMLElement {
 function createWinnerRow(winner: WinnerWithDetails, index: number): HTMLTableRowElement {
   const row = document.createElement('tr');
 
-  const numTd = document.createElement('td');
-  numTd.textContent = String((state.winnersPage - 1) * WINNERS_PER_PAGE + index + 1);
+  const numberTd = document.createElement('td');
+  numberTd.textContent = String((state.winnersPage - 1) * WINNERS_PER_PAGE + index + 1);
 
   const svgTd = document.createElement('td');
   svgTd.className = 'winner-car-svg';
@@ -57,7 +57,7 @@ function createWinnerRow(winner: WinnerWithDetails, index: number): HTMLTableRow
   const timeTd = document.createElement('td');
   timeTd.textContent = String(winner.time);
 
-  row.append(numTd, svgTd, nameTd, winsTd, timeTd);
+  row.append(numberTd, svgTd, nameTd, winsTd, timeTd);
   return row;
 }
 
@@ -89,17 +89,17 @@ function createPagination(handlers: GarageHandlers): HTMLElement {
   const pagination = document.createElement('div');
   pagination.className = 'pagination';
 
-  const prevBtn = document.createElement('button');
-  prevBtn.textContent = 'PREV';
-  prevBtn.disabled = state.winnersPage <= 1;
-  prevBtn.addEventListener('click', () => handlers.onWinnersPrev());
+  const previousButton = document.createElement('button');
+  previousButton.textContent = 'PREV';
+  previousButton.disabled = state.winnersPage <= 1;
+  previousButton.addEventListener('click', () => handlers.onWinnersPrev());
 
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = 'NEXT';
+  const nextButton = document.createElement('button');
+  nextButton.textContent = 'NEXT';
   const totalPages = Math.ceil(state.winnersCount / WINNERS_PER_PAGE);
-  nextBtn.disabled = state.winnersPage >= totalPages || state.winnersCount === 0;
-  nextBtn.addEventListener('click', () => handlers.onWinnersNext());
+  nextButton.disabled = state.winnersPage >= totalPages || state.winnersCount === 0;
+  nextButton.addEventListener('click', () => handlers.onWinnersNext());
 
-  pagination.append(prevBtn, nextBtn);
+  pagination.append(previousButton, nextButton);
   return pagination;
 }

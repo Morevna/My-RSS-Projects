@@ -9,9 +9,9 @@ export const animateCar = async (
   id: number,
 ): Promise<{ id: number; success: boolean; time: number }> => {
   const carTrack = document.querySelector(`[data-id="${id}"]`) as HTMLElement | null;
-  const btnA = carTrack?.querySelector('button:nth-child(3)') as HTMLButtonElement | null;
+  const buttonA = carTrack?.querySelector('button:nth-child(3)') as HTMLButtonElement | null;
 
-  if (btnA !== null) btnA.disabled = true;
+  if (buttonA !== null) buttonA.disabled = true;
 
   try {
     const { velocity, distance } = await startEngine(id);
@@ -40,7 +40,7 @@ export const animateCar = async (
 
     return { id, success: false, time: 0 };
   } catch (error) {
-    if (btnA !== null) btnA.disabled = false;
+    if (buttonA !== null) buttonA.disabled = false;
     console.error('Engine start failed:', error);
     return { id, success: false, time: 0 };
   }
@@ -49,13 +49,13 @@ export const animateCar = async (
 export const resetAnimation = (id: number): void => {
   const carTrack = document.querySelector(`[data-id="${id}"]`) as HTMLElement | null;
   const carModel = carTrack?.querySelector('.car-svg') as HTMLElement | null;
-  const btnA = carTrack?.querySelector('button:nth-child(3)') as HTMLButtonElement | null;
+  const buttonA = carTrack?.querySelector('button:nth-child(3)') as HTMLButtonElement | null;
 
   if (carModel !== null) {
     carModel.style.transition = 'none';
     carModel.style.transform = 'translateX(0)';
   }
-  if (btnA !== null) {
-    btnA.disabled = false;
+  if (buttonA !== null) {
+    buttonA.disabled = false;
   }
 };

@@ -20,9 +20,9 @@ function renderApp(): void {
   appContainer.innerHTML = '';
 
   const nav = createNavigation(() => {
-    const updateFunc = state.currentView === 'garage' ? updateState : updateWinnersState;
+    const updateFunction = state.currentView === 'garage' ? updateState : updateWinnersState;
 
-    updateFunc().catch(console.error);
+    updateFunction().catch(console.error);
   });
 
   appContainer.append(nav);

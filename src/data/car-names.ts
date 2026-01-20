@@ -28,8 +28,8 @@ export const models = [
 const NAME_PARTS = 6;
 const COLOR_MAX = 16;
 
-export function getRandomItem(arr: string[]): string {
-  return arr[Math.floor(Math.random() * arr.length)];
+export function getRandomItem(array: string[]): string {
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 export function getRandomColor(): string {

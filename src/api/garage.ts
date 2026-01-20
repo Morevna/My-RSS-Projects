@@ -4,8 +4,8 @@ import { Car, GetWinnersResponse, Winner } from '../types';
 const BASE_URL = 'http://127.0.0.1:3000';
 
 export async function startEngine(id: number): Promise<{ velocity: number; distance: number }> {
-  const res = await fetch(`${BASE_URL}/engine?id=${id}&status=started`, { method: 'PATCH' });
-  return res.json() as Promise<{ velocity: number; distance: number }>;
+  const response = await fetch(`${BASE_URL}/engine?id=${id}&status=started`, { method: 'PATCH' });
+  return response.json() as Promise<{ velocity: number; distance: number }>;
 }
 
 export async function stopEngine(id: number): Promise<void> {
@@ -14,9 +14,9 @@ export async function stopEngine(id: number): Promise<void> {
 
 export async function driveMode(id: number): Promise<{ success: boolean }> {
   try {
-    const res = await fetch(`${BASE_URL}/engine?id=${id}&status=drive`, { method: 'PATCH' });
-    if (res.status === 500) return { success: false };
-    return (await res.json()) as { success: boolean };
+    const response = await fetch(`${BASE_URL}/engine?id=${id}&status=drive`, { method: 'PATCH' });
+    if (response.status === 500) return { success: false };
+    return (await response.json()) as { success: boolean };
   } catch {
     return { success: false };
   }
@@ -76,9 +76,9 @@ export async function getWinners(
 
 //
 export async function getWinner(id: number): Promise<Winner | null> {
-  const res = await fetch(`${BASE_URL}/winners/${id}`);
-  if (res.status === 404) return null;
-  return res.json() as Promise<Winner>;
+  const response = await fetch(`${BASE_URL}/winners/${id}`);
+  if (response.status === 404) return null;
+  return response.json() as Promise<Winner>;
 }
 
 export async function createWinner(winner: Winner): Promise<void> {

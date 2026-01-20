@@ -16,16 +16,16 @@ function getCreateGroup(handlers: GarageHandlers): HTMLElement {
   colorInput.type = 'color';
   colorInput.id = 'create-color';
 
-  const btn = document.createElement('button');
-  btn.textContent = 'CREATE';
-  btn.addEventListener('click', (): void => {
+  const button = document.createElement('button');
+  button.textContent = 'CREATE';
+  button.addEventListener('click', (): void => {
     if (nameInput.value) {
       void handlers.onCreate(nameInput.value, colorInput.value);
       nameInput.value = '';
     }
   });
 
-  group.append(nameInput, colorInput, btn);
+  group.append(nameInput, colorInput, button);
   return group;
 }
 
@@ -45,16 +45,16 @@ function getUpdateGroup(handlers: GarageHandlers): HTMLElement {
   colorInput.disabled = !state.selectedCar;
   if (state.selectedCar) colorInput.value = state.selectedCar.color;
 
-  const btn = document.createElement('button');
-  btn.textContent = 'UPDATE';
-  btn.disabled = !state.selectedCar;
-  btn.addEventListener('click', (): void => {
+  const button = document.createElement('button');
+  button.textContent = 'UPDATE';
+  button.disabled = !state.selectedCar;
+  button.addEventListener('click', (): void => {
     if (state.selectedCar && nameInput.value) {
       void handlers.onUpdate(nameInput.value, colorInput.value);
     }
   });
 
-  group.append(nameInput, colorInput, btn);
+  group.append(nameInput, colorInput, button);
   return group;
 }
 
@@ -62,21 +62,21 @@ function getActionGroup(handlers: GarageHandlers): HTMLElement {
   const group = document.createElement('div');
   group.className = 'input-group';
 
-  const raceBtn = document.createElement('button');
-  raceBtn.textContent = 'RACE';
-  raceBtn.addEventListener('click', (): void => handlers.onRace());
+  const raceButton = document.createElement('button');
+  raceButton.textContent = 'RACE';
+  raceButton.addEventListener('click', (): void => handlers.onRace());
 
-  const resetBtn = document.createElement('button');
-  resetBtn.textContent = 'RESET';
-  resetBtn.addEventListener('click', (): void => handlers.onReset());
+  const resetButton = document.createElement('button');
+  resetButton.textContent = 'RESET';
+  resetButton.addEventListener('click', (): void => handlers.onReset());
 
-  const genBtn = document.createElement('button');
-  genBtn.textContent = 'GENERATE CARS';
-  genBtn.addEventListener('click', (): void => {
+  const genButton = document.createElement('button');
+  genButton.textContent = 'GENERATE CARS';
+  genButton.addEventListener('click', (): void => {
     void handlers.onGenerate();
   });
 
-  group.append(raceBtn, resetBtn, genBtn);
+  group.append(raceButton, resetButton, genButton);
   return group;
 }
 
@@ -96,13 +96,13 @@ function createCarItem(car: Car, handlers: GarageHandlers): HTMLDivElement {
   const controlPanel = document.createElement('div');
   controlPanel.className = 'car-controls';
 
-  const selectBtn = document.createElement('button');
-  selectBtn.textContent = 'SELECT';
-  selectBtn.addEventListener('click', (): void => handlers.onSelectCar(car));
+  const selectButton = document.createElement('button');
+  selectButton.textContent = 'SELECT';
+  selectButton.addEventListener('click', (): void => handlers.onSelectCar(car));
 
-  const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'REMOVE';
-  removeBtn.addEventListener('click', (): void => {
+  const removeButton = document.createElement('button');
+  removeButton.textContent = 'REMOVE';
+  removeButton.addEventListener('click', (): void => {
     void handlers.onRemove(car.id);
   });
 
@@ -128,7 +128,7 @@ function createCarItem(car: Car, handlers: GarageHandlers): HTMLDivElement {
   const svg = svgWrapper.querySelector('svg');
   if (svg) svg.style.fill = car.color;
 
-  controlPanel.append(selectBtn, removeBtn, engineA, engineB, carName);
+  controlPanel.append(selectButton, removeButton, engineA, engineB, carName);
   item.append(controlPanel, svgWrapper);
   return item;
 }
@@ -137,18 +137,18 @@ function createPagination(handlers: GarageHandlers): HTMLElement {
   const pagination = document.createElement('div');
   pagination.id = 'pagination';
 
-  const prevBtn = document.createElement('button');
-  prevBtn.textContent = 'PREV';
-  prevBtn.disabled = state.garagePage <= 1;
-  prevBtn.addEventListener('click', (): void => handlers.onPrev());
+  const previousButton = document.createElement('button');
+  previousButton.textContent = 'PREV';
+  previousButton.disabled = state.garagePage <= 1;
+  previousButton.addEventListener('click', (): void => handlers.onPrev());
 
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = 'NEXT';
+  const nextButton = document.createElement('button');
+  nextButton.textContent = 'NEXT';
   const totalPages = Math.ceil(state.carsCount / CARS_PER_PAGE);
-  nextBtn.disabled = state.garagePage >= totalPages || state.carsCount === 0;
-  nextBtn.addEventListener('click', (): void => handlers.onNext());
+  nextButton.disabled = state.garagePage >= totalPages || state.carsCount === 0;
+  nextButton.addEventListener('click', (): void => handlers.onNext());
 
-  pagination.append(prevBtn, nextBtn);
+  pagination.append(previousButton, nextButton);
   return pagination;
 }
 

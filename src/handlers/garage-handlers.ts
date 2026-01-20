@@ -38,7 +38,7 @@ export const updateState = async (): Promise<void> => {
 
 const handleRace = async (): Promise<void> => {
   const tracks = document.querySelectorAll('.car-track');
-  const ids = [...tracks].map((el) => Number((el as HTMLElement).dataset.id));
+  const ids = [...tracks].map((element) => Number((element as HTMLElement).dataset.id));
   const results = await Promise.all(ids.map((id) => animateCar(id)));
   const finished = results
     .filter((r): r is { id: number; success: true; time: number } => r.success)
@@ -91,8 +91,8 @@ const getRaceAndEngine = (): Pick<
 > => ({
   onRace: async (): Promise<void> => handleRace(),
   onReset: async (): Promise<void> => {
-    const ids = [...document.querySelectorAll('.car-track')].map((el) =>
-      Number((el as HTMLElement).dataset.id),
+    const ids = [...document.querySelectorAll('.car-track')].map((element) =>
+      Number((element as HTMLElement).dataset.id),
     );
     await Promise.all(
       ids.map(async (id) => {
