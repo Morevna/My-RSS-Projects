@@ -129,8 +129,6 @@ button:disabled {
   z-index: 3;
 }
 
-
-
 /* Контейнер таблицы */
 .winners-view {
   padding: 20px;
@@ -142,7 +140,7 @@ button:disabled {
 .winners-title {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #ffcc00; 
+  color: #ffcc00;
 }
 .winners-table {
   width: 100%;
@@ -172,7 +170,9 @@ button:disabled {
 
 .sortable {
   cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
   position: relative;
 }
 
@@ -182,8 +182,12 @@ button:disabled {
 }
 
 /* Иконки сортировки (можно добавить через псевдоэлементы) */
-.sort-asc::after { content: ' ↑'; }
-.sort-desc::after { content: ' ↓'; }
+.sort-asc::after {
+  content: ' ↑';
+}
+.sort-desc::after {
+  content: ' ↓';
+}
 
 /* Чередование строк (Zebra Striping) */
 .winners-table tbody tr:nth-child(even) {
@@ -224,7 +228,9 @@ button:disabled {
   color: #000;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.1s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.1s ease;
 }
 
 .winners-pagination button:disabled {
@@ -238,8 +244,36 @@ button:disabled {
 }
 
 @media (max-width: 600px) {
-  .winners-table th, .winners-table td {
+  .winners-table th,
+  .winners-table td {
     padding: 8px 5px;
     font-size: 0.9rem;
   }
+}
+
+#message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffcc00;
+  padding: 20px 40px;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.visible {
+  opacity: 1;
+  visibility: visible;
 }

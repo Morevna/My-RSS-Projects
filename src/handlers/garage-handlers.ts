@@ -1,4 +1,5 @@
 // src/handlers/garage-handlers.ts
+import { showMessage } from '../components/message';
 import { state } from '../state/state';
 import {
   getCars,
@@ -6,34 +7,21 @@ import {
   deleteCar,
   updateCar,
   stopEngine,
-  getWinners,
-  getCar,
   getWinner,
   updateWinner,
   createWinner,
+  getCar,
 } from '../api/garage';
 import { animateCar, resetAnimation } from '../utils/animation';
 import { generateRandomCarName, getRandomColor } from '../data/car-names';
-import { GarageHandlers, Winner, Car } from '../types/index';
+import { Car, GarageActions } from '../types/index';
+import { updateWinnersState } from './winners-handlers';
 
 const PAGE_STEP = 1;
-const WINNERS_PER_PAGE = 10;
+const CARS_PER_GENERATION = 100;
 let refreshApp: () => void;
 
-// Helpers, State Update
-export const updateWinnersState = async (): Promise<void> => {
-  const { items, count } = await getWinners(
-    state.winnersPage,
-    state.sort,
-    state.order,
-    WINNERS_PER_PAGE,
-  );
-  state.winners = await Promise.all(
-    items.map(async (w: Winner) => ({ ...w, ...(await getCar(w.id)) })),
-  );
-  state.winnersCount = count;
-  refreshApp();
-};
+//Logic Helpers
 
 export const updateState = async (): Promise<void> => {
   const { items, count } = await getCars(state.garagePage);
@@ -48,42 +36,6 @@ export const updateState = async (): Promise<void> => {
   refreshApp();
 };
 
-//Garage Methods
-const handleCreate = async (name: string, color: string): Promise<void> => {
-  await createCar(name, color);
-  await updateState();
-};
-
-const handleRemove = async (id: number): Promise<void> => {
-  await deleteCar(id);
-  await updateState();
-  await updateWinnersState();
-};
-
-const handleUpdate = async (name: string, color: string): Promise<void> => {
-  if (state.selectedCar !== null) {
-    await updateCar(state.selectedCar.id, name, color);
-  }
-  state.selectedCar = null;
-  await updateState();
-  await updateWinnersState();
-};
-
-const handlePagination = (direction: number): void => {
-  state.garagePage += direction;
-  localStorage.setItem('garagePage', String(state.garagePage));
-  void updateState();
-};
-
-const handleGenerate = async (): Promise<void> => {
-  const promises = Array.from({ length: 100 }, () =>
-    createCar(generateRandomCarName(), getRandomColor()),
-  );
-  await Promise.all(promises);
-  await updateState();
-};
-
-//Race Methods
 const handleRace = async (): Promise<void> => {
   const tracks = document.querySelectorAll('.car-track');
   const ids = [...tracks].map((el) => Number((el as HTMLElement).dataset.id));
@@ -94,7 +46,8 @@ const handleRace = async (): Promise<void> => {
 
   if (finished.length > 0) {
     const winner = finished[0];
-    alert(`Winner: ID ${winner.id} (${winner.time}s)`);
+    const carData = state.cars.find((c) => c.id === winner.id) || (await getCar(winner.id));
+    showMessage(`${carData.name} went first (${winner.time}s)!`);
     const existing = await getWinner(winner.id);
     await (existing
       ? updateWinner(winner.id, {
@@ -106,53 +59,82 @@ const handleRace = async (): Promise<void> => {
   }
 };
 
-const handleReset = async (): Promise<void> => {
-  const tracks = document.querySelectorAll('.car-track');
-  const ids = [...tracks].map((el) => Number((el as HTMLElement).dataset.id));
-  await Promise.all(
-    ids.map(async (id) => {
-      await stopEngine(id);
-      resetAnimation(id);
-    }),
-  );
-};
+//Split Actions with explicit return types
+const getCarManagement = (): Pick<
+  GarageActions,
+  'onCreate' | 'onRemove' | 'onUpdate' | 'onSelectCar'
+> => ({
+  onCreate: async (n: string, c: string): Promise<void> => {
+    await createCar(n, c);
+    await updateState();
+  },
+  onRemove: async (id: number): Promise<void> => {
+    await deleteCar(id);
+    await updateState();
+    await updateWinnersState();
+  },
+  onUpdate: async (n: string, c: string): Promise<void> => {
+    if (state.selectedCar) await updateCar(state.selectedCar.id, n, c);
+    state.selectedCar = null;
+    await updateState();
+    await updateWinnersState();
+  },
+  onSelectCar: (car: Car): void => {
+    state.selectedCar = car;
+    refreshApp();
+  },
+});
 
-//Winners Methods
-const handleWinnersPage = (direction: number): void => {
-  state.winnersPage += direction;
-  localStorage.setItem('winnersPage', String(state.winnersPage));
-  void updateWinnersState();
-};
+const getRaceAndEngine = (): Pick<
+  GarageActions,
+  'onRace' | 'onReset' | 'onEngineStart' | 'onEngineStop'
+> => ({
+  onRace: async (): Promise<void> => handleRace(),
+  onReset: async (): Promise<void> => {
+    const ids = [...document.querySelectorAll('.car-track')].map((el) =>
+      Number((el as HTMLElement).dataset.id),
+    );
+    await Promise.all(
+      ids.map(async (id) => {
+        await stopEngine(id);
+        resetAnimation(id);
+      }),
+    );
+  },
+  onEngineStart: async (id: number): Promise<void> => {
+    await animateCar(id);
+  },
+  onEngineStop: async (id: number): Promise<void> => {
+    await stopEngine(id);
+    resetAnimation(id);
+  },
+});
 
-//Final Handlers Object
-export const initHandlers = (renderCallback: () => void): GarageHandlers => {
+const getNavigation = (): Pick<GarageActions, 'onNext' | 'onPrev' | 'onGenerate'> => ({
+  onNext: (): void => {
+    state.garagePage += PAGE_STEP;
+    void updateState();
+  },
+  onPrev: (): void => {
+    state.garagePage -= PAGE_STEP;
+    void updateState();
+  },
+  onGenerate: async (): Promise<void> => {
+    await Promise.all(
+      Array.from({ length: CARS_PER_GENERATION }, () =>
+        createCar(generateRandomCarName(), getRandomColor()),
+      ),
+    );
+    await updateState();
+  },
+});
+
+//Main Export
+export const initGarageHandlers = (renderCallback: () => void): GarageActions => {
   refreshApp = renderCallback;
   return {
-    onCreate: handleCreate,
-    onRemove: handleRemove,
-    onUpdate: handleUpdate,
-    onNext: (): void => handlePagination(PAGE_STEP),
-    onPrev: (): void => handlePagination(-PAGE_STEP),
-    onGenerate: handleGenerate,
-    onSelectCar: (car: Car): void => {
-      state.selectedCar = car;
-      refreshApp();
-    },
-    onRace: (): Promise<void> => handleRace(),
-    onReset: (): Promise<void> => handleReset(),
-    onEngineStart: async (id: number): Promise<void> => {
-      await animateCar(id);
-    },
-    onEngineStop: async (id: number): Promise<void> => {
-      await stopEngine(id);
-      resetAnimation(id);
-    },
-    onWinnersNext: (): void => handleWinnersPage(PAGE_STEP),
-    onWinnersPrev: (): void => handleWinnersPage(-PAGE_STEP),
-    onSort: async (type: 'wins' | 'time'): Promise<void> => {
-      state.order = state.sort === type && state.order === 'ASC' ? 'DESC' : 'ASC';
-      state.sort = type;
-      await updateWinnersState();
-    },
+    ...getCarManagement(),
+    ...getRaceAndEngine(),
+    ...getNavigation(),
   };
 };

@@ -10,7 +10,25 @@ export type Winner = {
   wins: number;
   time: number;
 };
+export type GarageActions = {
+  onCreate: (name: string, color: string) => Promise<void>;
+  onRemove: (id: number) => Promise<void>;
+  onUpdate: (name: string, color: string) => Promise<void>;
+  onNext: () => void;
+  onPrev: () => void;
+  onGenerate: () => Promise<void>;
+  onSelectCar: (car: Car) => void;
+  onRace: () => Promise<void>;
+  onReset: () => Promise<void>;
+  onEngineStart: (id: number) => Promise<void>;
+  onEngineStop: (id: number) => Promise<void>;
+};
 
+export type WinnersActions = {
+  onWinnersNext: () => void;
+  onWinnersPrev: () => void;
+  onSort: (type: 'wins' | 'time') => Promise<void>;
+};
 export type GetWinnersResponse = {
   items: Winner[];
   count: number;
