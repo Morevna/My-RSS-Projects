@@ -21,6 +21,7 @@ function renderApp(): void {
 
   const nav = createNavigation(() => {
     const updateFunc = state.currentView === 'garage' ? updateState : updateWinnersState;
+
     updateFunc().catch(console.error);
   });
 
@@ -36,9 +37,13 @@ function renderApp(): void {
   }
 }
 
-try {
-  await (state.currentView === 'garage' ? updateState() : updateWinnersState());
-} catch (error) {
-  console.error('Failed to load app:', error);
-  renderApp();
+async function initApp(): Promise<void> {
+  try {
+    await (state.currentView === 'garage' ? updateState() : updateWinnersState());
+  } catch (error) {
+    console.error('Failed to load app:', error);
+    renderApp();
+  }
 }
+// eslint-disable-next-line unicorn/prefer-top-level-await
+initApp();
