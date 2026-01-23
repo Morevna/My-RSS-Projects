@@ -25,8 +25,21 @@ export default tseslint.config(
       'unicorn/no-null': 'off',
       'unicorn/number-literal-case': 'off',
       'unicorn/numeric-separators-style': 'off',
-      'unicorn/prevent-abbreviations': 'off',
+      'unicorn/prevent-abbreviations': [
+        'error',
+        {
+          allowList: {
+            acc: true,
+            env: true,
+            i: true,
+            j: true,
+            props: true,
+            Props: true,
+          },
+        },
+      ],
     },
+    ignores: ['dist/**', 'node_modules/**']
   },
 
   prettierRecommended,
@@ -55,10 +68,10 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-
       'prettier/prettier': 'error',
     },
   },
+
   {
     files: ['eslint.config.js', 'eslint.config.mjs'],
     ...tseslint.configs.disableTypeChecked,

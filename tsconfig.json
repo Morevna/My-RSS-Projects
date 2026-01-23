@@ -6,6 +6,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
+
     /* Bundler mode (для Vite) */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -27,7 +28,8 @@
     /* Для корректной работы ESLint */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
   },
   "include": ["src", "eslint.config.mjs"]
 }
