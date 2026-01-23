@@ -22,7 +22,7 @@ export class SentenceCheckModel {
 
   public next(): boolean {
     if (this.currentIndex < this.sentences.length - 1) {
-      this.currentIndex++;
+      this.currentIndex += 1;
       return true;
     }
     return false;

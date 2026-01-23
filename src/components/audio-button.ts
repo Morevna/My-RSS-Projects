@@ -35,8 +35,7 @@ export class AudioButton {
     this.element.classList.add('playing');
     this.audio.currentTime = 0;
 
-    this.audio.play().catch((err) => {
-      console.error('error audio:', err);
+    this.audio.play().catch(() => {
       this.element.classList.remove('playing');
     });
   }

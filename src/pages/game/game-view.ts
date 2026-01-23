@@ -9,6 +9,8 @@ import { VisibleAudioButton } from '../../components/visiblle-audio-button';
 import { DragAndDrop } from './drag-drop';
 import './game.css';
 
+const SHUFFLE_COEFFICIENT = 0.5;
+
 export class GameView {
   private container: HTMLElement;
   private resultBlock!: HTMLElement;
@@ -168,7 +170,9 @@ export class GameView {
     this.updateAudioVisibility();
 
     const words = currentData.textExample.split(' ');
-    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+    const shuffledWords = [...words].sort(
+      () => Math.random() - SHUFFLE_COEFFICIENT,
+    );
 
     shuffledWords.forEach((word) => {
       const card = this.createWordCard(word);

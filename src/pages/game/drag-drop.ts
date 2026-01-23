@@ -1,3 +1,5 @@
+const HALF_DIVISOR = 2;
+
 export class DragAndDrop {
   private sourceBlock: HTMLElement;
   private resultBlock: HTMLElement;
@@ -14,7 +16,7 @@ export class DragAndDrop {
   }
 
   public makeDraggable(card: HTMLElement): void {
-    //Desktop
+    // Desktop
     card.draggable = true;
 
     card.addEventListener('dragstart', () => {
@@ -56,7 +58,7 @@ export class DragAndDrop {
       });
     });
 
-    //Mobile
+    // Mobile
     let offsetX = 0;
     let offsetY = 0;
     let isDragging = false;
@@ -87,10 +89,10 @@ export class DragAndDrop {
       const resultRect = this.resultBlock.getBoundingClientRect();
 
       if (
-        cardRect.top + cardRect.height / 2 > resultRect.top &&
-        cardRect.top + cardRect.height / 2 < resultRect.bottom &&
-        cardRect.left + cardRect.width / 2 > resultRect.left &&
-        cardRect.left + cardRect.width / 2 < resultRect.right
+        cardRect.top + cardRect.height / HALF_DIVISOR > resultRect.top &&
+        cardRect.top + cardRect.height / HALF_DIVISOR < resultRect.bottom &&
+        cardRect.left + cardRect.width / HALF_DIVISOR > resultRect.left &&
+        cardRect.left + cardRect.width / HALF_DIVISOR < resultRect.right
       ) {
         this.resultBlock.appendChild(card);
       } else {
@@ -118,12 +120,11 @@ export class DragAndDrop {
     return draggableElements.reduce(
       (closest: { offset: number; element: Element | null }, child) => {
         const box = child.getBoundingClientRect();
-        const offset = x - box.left - box.width / 2;
+        const offset = x - box.left - box.width / HALF_DIVISOR;
         if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
+          return { offset, element: child };
         }
+        return closest;
       },
       { offset: Number.NEGATIVE_INFINITY, element: null },
     ).element;

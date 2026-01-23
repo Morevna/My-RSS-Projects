@@ -30,7 +30,7 @@ export class DontKnowButton {
     this.resultBlock.innerHTML = '';
     this.sourceBlock.innerHTML = '';
 
-    //все слова в resultBlock, помечаем correct
+    // все слова в resultBlock, помечаем correct
     words.forEach((word) => {
       const card = document.createElement('div');
       card.className = 'word-card correct';
@@ -38,7 +38,7 @@ export class DontKnowButton {
       this.resultBlock.appendChild(card);
     });
 
-    //Check в режим Continue
+    // Check в режим Continue
     this.checkButton.setContinue();
   }
 }
