@@ -1,4 +1,4 @@
-import type { IWord } from '../../core/types';
+import type { IWord } from '../../../core/types/types';
 
 export class SentenceCheckModel {
   private sentences: IWord[] = [];

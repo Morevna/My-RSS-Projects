@@ -151,6 +151,12 @@
   min-width: 150px;
 }
 
+.game-btn:disabled {
+  background-color: #444;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .secondary-btn {
   background-color: #f39c12;
 }

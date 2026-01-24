@@ -1,4 +1,4 @@
-import type { SentenceCheckModel } from '../pages/game/sentence-check-model';
+import type { SentenceCheckModel } from '../../pages/game/models/sentence-check-model';
 import type { CheckButton } from './check-button';
 
 export class DontKnowButton {

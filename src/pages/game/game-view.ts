@@ -1,11 +1,11 @@
 import { HeaderView } from '../../components/header/header-view';
-import { getLevelData } from '../../core/data-service';
-import { SentenceCheckModel } from './sentence-check-model';
-import { CheckButton } from '../../components/check-button';
-import { TranslateButton } from '../../components/translate-button';
-import { DontKnowButton } from '../../components/dont-know-button';
-import { AudioButton } from '../../components/audio-button';
-import { VisibleAudioButton } from '../../components/visiblle-audio-button';
+import { getLevelData } from '../../core/api/data-service';
+import { SentenceCheckModel } from './models/sentence-check-model';
+import { CheckButton } from '../../components/buttons/check-button';
+import { TranslateButton } from '../../components/buttons/translate-button';
+import { DontKnowButton } from '../../components/buttons/dont-know-button';
+import { AudioButton } from '../../components/buttons/audio-button';
+import { VisibleAudioButton } from '../../components/buttons/visiblle-audio-button';
 import { DragAndDrop } from './drag-drop';
 import './game.css';
 

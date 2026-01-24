@@ -1,4 +1,4 @@
-import { DATA_URL } from '../core/constants';
+import { ENV } from '../../app/env';
 
 export class AudioButton {
   private element: HTMLButtonElement;
@@ -18,7 +18,7 @@ export class AudioButton {
   }
 
   public setAudio(audioPath: string): void {
-    const fullUrl = `${DATA_URL}${audioPath}`;
+    const fullUrl = `${ENV}${audioPath}`;
 
     this.stop();
 
