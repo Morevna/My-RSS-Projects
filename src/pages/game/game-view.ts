@@ -3,6 +3,7 @@ import { getLevelData } from '../../core/api/data-service';
 import { SentenceCheckModel } from './models/sentence-check-model';
 import { CheckButton } from '../../components/buttons/check-button';
 import { TranslateButton } from '../../components/buttons/translate-button';
+import { PuzzleButton } from '../../components/buttons/puzzle-button';
 import { DontKnowButton } from '../../components/buttons/dont-know-button';
 import { AudioButton } from '../../components/buttons/audio-button';
 import { VisibleAudioButton } from '../../components/buttons/visiblle-audio-button';
@@ -21,6 +22,8 @@ export class GameView {
   private translationBlock!: HTMLElement;
   private mainBtn!: HTMLButtonElement;
   private dontKnowBtn!: HTMLButtonElement;
+  private puzzleButton!: PuzzleButton;
+  private isImageHintActive: boolean = true;
 
   private model = new SentenceCheckModel();
   private checkButton!: CheckButton;
@@ -85,6 +88,12 @@ export class GameView {
       this.updateAudioVisibility();
     });
 
+    this.puzzleButton = new PuzzleButton((state) => {
+      this.isImageHintActive = state;
+      this.renderNewSentence();
+    });
+
+    translationWrapper.prepend(this.puzzleButton.getElement());
     translationWrapper.append(
       this.audioTumbler.getElement(),
       this.audioButton.getElement(),
@@ -131,9 +140,10 @@ export class GameView {
       this.checkButton,
     );
 
-    this.dontKnowBtn.addEventListener('click', () =>
-      this.updateTranslationVisibility(),
-    );
+    this.dontKnowBtn.addEventListener('click', () => {
+      this.updateTranslationVisibility();
+      this.onStateChange();
+    });
 
     this.dragDrop = new DragAndDrop(this.sourceBlock, this.resultBlock, () =>
       this.onStateChange(),
@@ -148,10 +158,25 @@ export class GameView {
     this.checkButton.updateStatus();
 
     if (this.mainBtn.textContent === 'Continue') {
-      this.resultBlock.querySelectorAll('.word-card').forEach((card) => {
-        card.classList.remove('incorrect');
-        card.classList.add('correct');
-      });
+      this.puzzleButton.setEnabled(false);
+
+      this.resultBlock
+        .querySelectorAll<HTMLElement>('.word-card')
+        .forEach((card) => {
+          card.classList.remove('incorrect');
+          card.classList.add('correct');
+
+          const word = card.textContent || '';
+          const fragment = this.imageFragments.find(
+            (f) =>
+              f.word === word &&
+              f.sentenceIndex === this.model.getCurrentIndex(),
+          );
+
+          if (fragment) {
+            card.style.backgroundImage = `url(${fragment.canvas.toDataURL()})`;
+          }
+        });
     }
 
     this.updateTranslationVisibility();
@@ -189,6 +214,10 @@ export class GameView {
     this.resultBlock.innerHTML = '';
     this.sourceBlock.innerHTML = '';
 
+    if (this.puzzleButton) {
+      this.puzzleButton.setEnabled(true);
+    }
+
     this.updateTranslationVisibility();
     this.updateAudioVisibility();
 
@@ -209,28 +238,24 @@ export class GameView {
   private createWordCard(word: string, sentenceIndex: number): HTMLElement {
     const card = document.createElement('div');
     card.className = 'word-card';
-    card.textContent = word; // текст нужен для CheckButton
-    card.style.display = 'flex';
-    card.style.alignItems = 'center';
-    card.style.justifyContent = 'center';
-    card.style.position = 'relative';
-    card.style.fontWeight = 'bold';
-    card.style.zIndex = '1';
+    card.textContent = word;
 
     const fragment = this.imageFragments.find(
       (f) => f.word === word && f.sentenceIndex === sentenceIndex,
     );
 
     if (fragment) {
-      const bgCanvasUrl = fragment.canvas.toDataURL();
-      card.style.backgroundImage = `url(${bgCanvasUrl})`;
       card.style.width = `${fragment.canvas.width}px`;
       card.style.height = `${fragment.canvas.height}px`;
-      card.style.backgroundRepeat = 'no-repeat';
-      card.style.backgroundSize = 'cover';
+      const isFinished = this.mainBtn.textContent === 'Continue';
+
+      if (this.isImageHintActive || isFinished) {
+        card.style.backgroundImage = `url(${fragment.canvas.toDataURL()})`;
+      } else {
+        card.style.backgroundImage = 'none';
+      }
     }
 
-    // обработчик перемещения карточки
     card.onclick = () => {
       if (this.mainBtn.textContent === 'Continue') return;
       const target =

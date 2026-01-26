@@ -131,7 +131,25 @@
 .result-block .word-card {
   margin: 0;
 }
+.puzzle-hint-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #444;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
 
+.puzzle-hint-btn.active {
+  border-color: #f1c40f;
+  background: rgba(241, 196, 15, 0.1);
+  box-shadow: 0 0 5px rgba(241, 196, 15, 0.3);
+}
 .word-card {
   width: 100px;
   display: flex;
@@ -139,12 +157,14 @@
   justify-content: center;
   color: white;
   cursor: pointer;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   box-sizing: border-box;
-  text-shadow: 1px 1px 2px black;
   font-weight: bold;
   padding: 0;
   margin: 0;
+  background-color: rgb(88, 129, 143);
 }
 
 .word-card.correct {
