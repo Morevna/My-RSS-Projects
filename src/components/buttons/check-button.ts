@@ -1,4 +1,4 @@
-import type { SentenceCheckModel } from '../pages/game/sentence-check-model';
+import type { SentenceCheckModel } from '../../pages/game/models/sentence-check-model';
 
 export class CheckButton {
   private button: HTMLButtonElement;
@@ -24,13 +24,22 @@ export class CheckButton {
   }
 
   public updateStatus(): void {
-    if (this.button.textContent === 'Check') {
-      const totalWords = this.model
-        .getCurrentSentence()
-        .textExample.split(' ').length;
-      const currentWords = this.resultBlock.children.length;
-      this.button.disabled = currentWords !== totalWords;
+    const userWords = Array.from(this.resultBlock.children).map(
+      (el) => el.textContent?.trim() || '',
+    );
+
+    if (userWords.length === 0) {
+      this.button.disabled = true;
+      this.button.textContent = 'Check';
+      return;
     }
+
+    this.button.disabled = false;
+
+    const results = this.model.getCheckResults(userWords);
+    const allCorrect = results.every(Boolean);
+
+    this.button.textContent = allCorrect ? 'Continue' : 'Check';
   }
 
   private handleClick(): void {

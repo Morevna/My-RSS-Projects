@@ -2,6 +2,10 @@ import { getValidationError } from './login-validation';
 import { StartView } from '../start/start-view';
 import './login.css';
 
+const MIN_FIRST_NAME_LENGTH = 3;
+const MIN_SURNAME_LENGTH = 4;
+const REDIRECT_DELAY = 1000;
+
 export class LoginView {
   private container: HTMLElement;
   private firstNameInput!: HTMLInputElement;
@@ -68,8 +72,14 @@ export class LoginView {
   }
 
   private validate(): void {
-    const fNameError = getValidationError(this.firstNameInput.value, 3);
-    const sNameError = getValidationError(this.surnameInput.value, 4);
+    const fNameError = getValidationError(
+      this.firstNameInput.value,
+      MIN_FIRST_NAME_LENGTH,
+    );
+    const sNameError = getValidationError(
+      this.surnameInput.value,
+      MIN_SURNAME_LENGTH,
+    );
 
     this.firstNameError.textContent = fNameError || '';
     this.surnameError.textContent = sNameError || '';
@@ -101,7 +111,7 @@ export class LoginView {
     setTimeout(() => {
       const startPage = new StartView();
       startPage.draw();
-    }, 1000);
+    }, REDIRECT_DELAY);
   }
 
   private loadUserData(): void {

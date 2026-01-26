@@ -103,8 +103,6 @@
 .result-block,
 .source-block {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   width: 90%;
   max-width: 800px;
   min-height: 100px;
@@ -115,23 +113,50 @@
   box-sizing: border-box;
 }
 
+.result-block {
+  flex-wrap: nowrap;
+  gap: 0px;
+  overflow-x: auto;
+}
+
+.source-block {
+  flex-wrap: wrap;
+  gap: 0px;
+}
+
+.source-block .word-card {
+  margin: 5px;
+}
+
+.result-block .word-card {
+  margin: 0;
+}
+
 .word-card {
-  padding: 10px 20px;
-  background-color: #646cff;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
-  border-radius: 6px;
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    background-color 0.2s;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 2px black;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
 }
 
 .word-card.correct {
-  background-color: #4caf50 !important;
+  box-shadow:
+    0px -15px 10px -5px rgba(37, 158, 35, 0.7),
+    0px 15px 10px -5px rgba(37, 158, 35, 0.7);
   cursor: default;
 }
 .word-card.incorrect {
-  background-color: #f44336 !important;
+  box-shadow:
+    0px -15px 10px -5px rgba(158, 35, 35, 0.7),
+    0px 15px 10px -5px rgba(158, 35, 35, 0.7);
 }
 
 .controls-container {
@@ -149,6 +174,12 @@
   background-color: #646cff;
   color: white;
   min-width: 150px;
+}
+
+.game-btn:disabled {
+  background-color: #444;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .secondary-btn {

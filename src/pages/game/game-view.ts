@@ -1,13 +1,18 @@
 import { HeaderView } from '../../components/header/header-view';
-import { getLevelData } from '../../core/data-service';
-import { SentenceCheckModel } from './sentence-check-model';
-import { CheckButton } from '../../components/check-button';
-import { TranslateButton } from '../../components/translate-button';
-import { DontKnowButton } from '../../components/dont-know-button';
-import { AudioButton } from '../../components/audio-button';
-import { VisibleAudioButton } from '../../components/visiblle-audio-button';
+import { getLevelData } from '../../core/api/data-service';
+import { SentenceCheckModel } from './models/sentence-check-model';
+import { CheckButton } from '../../components/buttons/check-button';
+import { TranslateButton } from '../../components/buttons/translate-button';
+import { DontKnowButton } from '../../components/buttons/dont-know-button';
+import { AudioButton } from '../../components/buttons/audio-button';
+import { VisibleAudioButton } from '../../components/buttons/visiblle-audio-button';
 import { DragAndDrop } from './drag-drop';
+import { loadImage, splitImageBySentences } from '../../core/utils/image-utils';
+import { ENV } from '../../app/env';
+
 import './game.css';
+
+const SHUFFLE_COEFFICIENT = 0.5;
 
 export class GameView {
   private container: HTMLElement;
@@ -24,6 +29,12 @@ export class GameView {
   private audioTumbler!: VisibleAudioButton;
   private dragDrop!: DragAndDrop;
 
+  private imageFragments: {
+    sentenceIndex: number;
+    word: string;
+    canvas: HTMLCanvasElement;
+  }[] = [];
+
   constructor() {
     this.container = document.createElement('div');
     this.container.className = 'game-container';
@@ -31,9 +42,23 @@ export class GameView {
     this.loadGameData();
   }
 
+  private async loadImageFragments(): Promise<void> {
+    const data = await getLevelData(1);
+    const round = data.rounds[0];
+    const sentences = round.words;
+
+    const imagePath = round.levelData.imageSrc;
+
+    const imgUrl = `${ENV.DATA_URL}images/${imagePath}`;
+    const img = await loadImage(imgUrl);
+
+    this.imageFragments = splitImageBySentences(img, sentences);
+  }
+
   private async loadGameData(): Promise<void> {
     const data = await getLevelData(1);
     this.model.setSentences(data.rounds[0].words);
+    await this.loadImageFragments();
     this.renderNewSentence();
   }
 
@@ -168,10 +193,12 @@ export class GameView {
     this.updateAudioVisibility();
 
     const words = currentData.textExample.split(' ');
-    const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+    const shuffledWords = [...words].sort(
+      () => Math.random() - SHUFFLE_COEFFICIENT,
+    );
 
     shuffledWords.forEach((word) => {
-      const card = this.createWordCard(word);
+      const card = this.createWordCard(word, this.model.getCurrentIndex());
       this.sourceBlock.appendChild(card);
       this.dragDrop.makeDraggable(card);
     });
@@ -179,11 +206,31 @@ export class GameView {
     this.checkButton.updateStatus();
   }
 
-  private createWordCard(word: string): HTMLElement {
+  private createWordCard(word: string, sentenceIndex: number): HTMLElement {
     const card = document.createElement('div');
     card.className = 'word-card';
-    card.textContent = word;
+    card.textContent = word; // текст нужен для CheckButton
+    card.style.display = 'flex';
+    card.style.alignItems = 'center';
+    card.style.justifyContent = 'center';
+    card.style.position = 'relative';
+    card.style.fontWeight = 'bold';
+    card.style.zIndex = '1';
 
+    const fragment = this.imageFragments.find(
+      (f) => f.word === word && f.sentenceIndex === sentenceIndex,
+    );
+
+    if (fragment) {
+      const bgCanvasUrl = fragment.canvas.toDataURL();
+      card.style.backgroundImage = `url(${bgCanvasUrl})`;
+      card.style.width = `${fragment.canvas.width}px`;
+      card.style.height = `${fragment.canvas.height}px`;
+      card.style.backgroundRepeat = 'no-repeat';
+      card.style.backgroundSize = 'cover';
+    }
+
+    // обработчик перемещения карточки
     card.onclick = () => {
       if (this.mainBtn.textContent === 'Continue') return;
       const target =

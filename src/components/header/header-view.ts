@@ -15,9 +15,9 @@ export class HeaderView {
     logoutBtn.className = 'logout-btn';
 
     logoutBtn.addEventListener('click', () => {
-      if (confirm('Do you really want to logout?')) {
+      if (window.confirm('Do you really want to logout?')) {
         localStorage.removeItem('rss-puzzle-user');
-        location.reload();
+        window.location.reload();
       }
     });
 

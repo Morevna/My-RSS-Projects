@@ -1,4 +1,4 @@
-import { DATA_URL } from '../core/constants';
+import { ENV } from '../../app/env';
 
 export class AudioButton {
   private element: HTMLButtonElement;
@@ -17,8 +17,9 @@ export class AudioButton {
     this.element.onclick = () => this.play();
   }
 
-  public setAudio(audioPath: string): void {
-    const fullUrl = `${DATA_URL}${audioPath}`;
+  public setAudio(audioPath: string | undefined): void {
+    if (!audioPath) return;
+    const fullUrl = `${ENV.DATA_URL}${audioPath}`;
 
     this.stop();
 
@@ -35,8 +36,7 @@ export class AudioButton {
     this.element.classList.add('playing');
     this.audio.currentTime = 0;
 
-    this.audio.play().catch((err) => {
-      console.error('error audio:', err);
+    this.audio.play().catch(() => {
       this.element.classList.remove('playing');
     });
   }
