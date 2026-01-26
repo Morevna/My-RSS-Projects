@@ -1,12 +1,14 @@
 export class VisibleAudioButton {
   private element: HTMLButtonElement;
-  public isActive: boolean = true;
+  public isActive: boolean;
   private onToggle: (isActive: boolean) => void;
 
-  constructor(onToggle: (isActive: boolean) => void) {
+  constructor(onToggle: (isActive: boolean) => void, initialState: boolean) {
+    this.isActive = initialState;
     this.onToggle = onToggle;
     this.element = document.createElement('button');
-    this.element.className = 'audio-tumbler active';
+    this.element.className = 'audio-tumbler';
+    this.element.classList.toggle('active', this.isActive);
 
     this.updateUI();
 

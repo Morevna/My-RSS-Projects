@@ -1,6 +1,7 @@
 import { getValidationError } from './login-validation';
 import { StartView } from '../start/start-view';
 import './login.css';
+import { SettingsService } from '../../core/utils/settings-service';
 
 const MIN_FIRST_NAME_LENGTH = 3;
 const MIN_SURNAME_LENGTH = 4;
@@ -97,6 +98,7 @@ export class LoginView {
   //
   private saveToLocalStorage(event: Event): void {
     event.preventDefault();
+    SettingsService.reset();
     const userData = {
       firstName: this.firstNameInput.value,
       surname: this.surnameInput.value,

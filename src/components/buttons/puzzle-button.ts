@@ -1,11 +1,15 @@
 export class PuzzleButton {
   private button: HTMLButtonElement;
-  private isActive: boolean = true;
+  private isActive: boolean;
 
-  constructor(onClick: (state: boolean) => void) {
+  constructor(onClick: (state: boolean) => void, initialState: boolean) {
+    this.isActive = initialState;
+
     this.button = document.createElement('button');
-    this.button.className = 'puzzle-hint-btn active';
+    this.button.className = 'puzzle-hint-btn';
     this.button.innerHTML = '🧩';
+
+    this.button.classList.toggle('active', this.isActive);
 
     this.button.addEventListener('click', () => {
       if (this.button.disabled) return;
@@ -22,7 +26,7 @@ export class PuzzleButton {
     if (!status) {
       this.button.classList.remove('active');
     } else {
-      this.button.classList.add('active');
+      this.button.classList.toggle('active', this.isActive);
     }
   }
 

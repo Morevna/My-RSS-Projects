@@ -8,6 +8,7 @@ import { DontKnowButton } from '../../components/buttons/dont-know-button';
 import { AudioButton } from '../../components/buttons/audio-button';
 import { VisibleAudioButton } from '../../components/buttons/visiblle-audio-button';
 import { DragAndDrop } from './drag-drop';
+import { SettingsService } from '../../core/utils/settings-service';
 import { loadImage, splitImageBySentences } from '../../core/utils/image-utils';
 import { ENV } from '../../app/env';
 
@@ -66,6 +67,10 @@ export class GameView {
   }
 
   private initLayout(): void {
+    const settings = SettingsService.load();
+
+    this.isImageHintActive = settings.isPuzzleEnabled;
+
     document.body.innerHTML = '';
     const header = new HeaderView();
     document.body.append(header.getElement());
@@ -76,9 +81,13 @@ export class GameView {
     this.translationBlock = document.createElement('p');
     this.translationBlock.className = 'translation-hint';
 
-    this.translateButton = new TranslateButton(() =>
-      this.updateTranslationVisibility(),
-    );
+    this.translateButton = new TranslateButton(() => {
+      this.updateTranslationVisibility();
+      SettingsService.save({
+        isTranslationEnabled: this.translateButton.getVisibility(),
+      });
+    }, settings.isTranslationEnabled);
+
     this.audioButton = new AudioButton();
 
     this.audioTumbler = new VisibleAudioButton((isActive) => {
@@ -86,12 +95,14 @@ export class GameView {
         this.audioButton.stop();
       }
       this.updateAudioVisibility();
-    });
+      SettingsService.save({ isAudioEnabled: isActive });
+    }, settings.isAudioEnabled);
 
     this.puzzleButton = new PuzzleButton((state) => {
       this.isImageHintActive = state;
       this.renderNewSentence();
-    });
+      SettingsService.save({ isPuzzleEnabled: state });
+    }, settings.isPuzzleEnabled);
 
     translationWrapper.prepend(this.puzzleButton.getElement());
     translationWrapper.append(

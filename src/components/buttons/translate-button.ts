@@ -3,12 +3,13 @@ export class TranslateButton {
   private isVisible: boolean;
   private onToggle: (isVisible: boolean) => void;
 
-  constructor(onToggle: (isVisible: boolean) => void) {
-    this.isVisible = true;
+  constructor(onToggle: (isVisible: boolean) => void, initialState: boolean) {
+    this.isVisible = initialState;
     this.onToggle = onToggle;
 
     this.element = document.createElement('button');
-    this.element.className = 'translate-btn active';
+    this.element.className = 'translate-btn';
+    this.element.classList.toggle('active', this.isVisible);
 
     this.updateUI();
 

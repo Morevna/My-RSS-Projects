@@ -1,3 +1,5 @@
+import { SettingsService } from '../../core/utils/settings-service';
+import { LoginView } from '../../pages/login/login-view';
 import './header.css';
 
 export class HeaderView {
@@ -17,7 +19,9 @@ export class HeaderView {
     logoutBtn.addEventListener('click', () => {
       if (window.confirm('Do you really want to logout?')) {
         localStorage.removeItem('rss-puzzle-user');
-        window.location.reload();
+        SettingsService.reset();
+        const loginPage = new LoginView();
+        loginPage.draw();
       }
     });
 
