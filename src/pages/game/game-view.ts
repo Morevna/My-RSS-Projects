@@ -1,3 +1,4 @@
+// pages/game/game-view.ts
 import { HeaderView } from '../../components/header/header-view';
 import { getLevelData } from '../../core/api/data-service';
 import { SentenceCheckModel } from './models/sentence-check-model';
@@ -10,11 +11,15 @@ import { VisibleAudioButton } from '../../components/buttons/visiblle-audio-butt
 import { DragAndDrop } from './drag-drop';
 import { SettingsService } from '../../core/utils/settings-service';
 import { loadImage, splitImageBySentences } from '../../core/utils/image-utils';
+import { LevelSelectorView } from './level-selector-view';
+import { LevelService } from '../../core/utils/level-service';
+import type { IImageFragment } from '../../core/types/types';
 import { ENV } from '../../app/env';
 
 import './game.css';
 
 const SHUFFLE_COEFFICIENT = 0.5;
+const TOTAL_LEVELS = 6;
 
 export class GameView {
   private container: HTMLElement;
@@ -25,6 +30,7 @@ export class GameView {
   private dontKnowBtn!: HTMLButtonElement;
   private puzzleButton!: PuzzleButton;
   private isImageHintActive: boolean = true;
+  private levelSelector!: LevelSelectorView;
 
   private model = new SentenceCheckModel();
   private checkButton!: CheckButton;
@@ -33,11 +39,7 @@ export class GameView {
   private audioTumbler!: VisibleAudioButton;
   private dragDrop!: DragAndDrop;
 
-  private imageFragments: {
-    sentenceIndex: number;
-    word: string;
-    canvas: HTMLCanvasElement;
-  }[] = [];
+  private imageFragments: IImageFragment[] = [];
 
   constructor() {
     this.container = document.createElement('div');
@@ -46,9 +48,12 @@ export class GameView {
     this.loadGameData();
   }
 
-  private async loadImageFragments(): Promise<void> {
-    const data = await getLevelData(1);
-    const round = data.rounds[0];
+  private async loadImageFragments(
+    level: number,
+    roundIndex: number,
+  ): Promise<void> {
+    const data = await getLevelData(level + 1);
+    const round = data.rounds[roundIndex];
     const sentences = round.words;
 
     const imagePath = round.levelData.imageSrc;
@@ -60,9 +65,10 @@ export class GameView {
   }
 
   private async loadGameData(): Promise<void> {
-    const data = await getLevelData(1);
-    this.model.setSentences(data.rounds[0].words);
-    await this.loadImageFragments();
+    const { level, round } = LevelService.load();
+    const data = await getLevelData(level + 1);
+    this.model.setSentences(data.rounds[round].words);
+    await this.loadImageFragments(level, round);
     this.renderNewSentence();
   }
 
@@ -104,6 +110,11 @@ export class GameView {
       SettingsService.save({ isPuzzleEnabled: state });
     }, settings.isPuzzleEnabled);
 
+    this.levelSelector = new LevelSelectorView((level, round) => {
+      this.restartGame(level, round);
+    });
+
+    this.container.prepend(this.levelSelector.getElement());
     translationWrapper.prepend(this.puzzleButton.getElement());
     translationWrapper.append(
       this.audioTumbler.getElement(),
@@ -160,9 +171,52 @@ export class GameView {
       this.onStateChange(),
     );
 
-    this.mainBtn.addEventListener('nextSentence', () =>
-      this.renderNewSentence(),
-    );
+    this.mainBtn.addEventListener('nextSentence', () => this.handleNextStep());
+  }
+
+  private async handleNextStep(): Promise<void> {
+    if (this.model.isLastSentence()) {
+      const { level, round } = LevelService.load();
+      const data = await getLevelData(level + 1);
+
+      let nextLevel = level;
+      let nextRound = round + 1;
+
+      if (nextRound >= data.rounds.length) {
+        nextLevel = (level + 1) % TOTAL_LEVELS;
+        nextRound = 0;
+      }
+
+      LevelService.save({ level: nextLevel, round: nextRound });
+
+      const nextData = await getLevelData(nextLevel + 1);
+
+      this.levelSelector.updateLevelAndRound(
+        nextLevel,
+        nextRound,
+        nextData.rounds.length,
+      );
+      await this.restartGame(nextLevel, nextRound);
+    } else {
+      this.model.next();
+      this.renderNewSentence();
+    }
+  }
+
+  private async restartGame(level: number, round: number): Promise<void> {
+    this.resultBlock.innerHTML = '';
+    this.sourceBlock.innerHTML = '';
+
+    const data = await getLevelData(level + 1);
+    this.levelSelector.updateRounds(data.rounds.length, round);
+    const currentRoundData = data.rounds[round] || data.rounds[0];
+
+    this.model.setSentences(currentRoundData.words);
+
+    this.model.resetCurrentIndex();
+
+    await this.loadImageFragments(level, round);
+    this.renderNewSentence();
   }
 
   private onStateChange(): void {

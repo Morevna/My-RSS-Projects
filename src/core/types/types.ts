@@ -1,3 +1,5 @@
+// src/core/types/types.ts
+
 export interface IWord {
   audioExample: string;
   textExample: string;
@@ -12,6 +14,18 @@ export interface IRound {
     imageSrc: string;
     name: string;
     year: string;
+    cuttedSrc: string;
   };
   words: IWord[];
+}
+
+export interface ILevelData {
+  rounds: IRound[];
+  roundsCount: number;
+}
+
+export interface IImageFragment {
+  sentenceIndex: number;
+  word: string;
+  canvas: HTMLCanvasElement;
 }

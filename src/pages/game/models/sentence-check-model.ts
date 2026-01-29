@@ -1,3 +1,4 @@
+// pages/game/models/sentence-check-model.ts
 import type { IWord } from '../../../core/types/types';
 
 export class SentenceCheckModel {
@@ -9,14 +10,21 @@ export class SentenceCheckModel {
     this.currentIndex = 0;
   }
 
+  public resetCurrentIndex(): void {
+    this.currentIndex = 0;
+  }
+
   public getCurrentSentence(): IWord {
+    if (this.sentences.length === 0) {
+      throw new Error('Sentences are not set');
+    }
     return this.sentences[this.currentIndex];
   }
 
   public getCheckResults(userWords: string[]): boolean[] {
     const correctWords = this.getCurrentSentence().textExample.split(' ');
     return userWords.map(
-      (word: string, index: number) => word === correctWords[index],
+      (word: string, index: number): boolean => word === correctWords[index],
     );
   }
 
@@ -28,7 +36,11 @@ export class SentenceCheckModel {
     return false;
   }
 
-  getCurrentIndex() {
+  public getCurrentIndex(): number {
     return this.currentIndex;
+  }
+
+  public isLastSentence(): boolean {
+    return this.currentIndex === this.sentences.length - 1;
   }
 }
