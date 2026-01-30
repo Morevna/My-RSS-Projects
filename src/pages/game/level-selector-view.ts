@@ -27,6 +27,15 @@ export class LevelSelectorView {
       if (i === currentRound) option.selected = true;
       this.roundSelect.appendChild(option);
     }
+    this.roundSelect.value = currentRound.toString();
+  }
+
+  public setCurrentRound(roundIndex: number): void {
+    this.roundSelect.value = roundIndex.toString();
+  }
+
+  public setCurrentLevel(levelIndex: number): void {
+    this.levelSelect.value = levelIndex.toString();
   }
 
   public updateLevelAndRound(
@@ -36,6 +45,12 @@ export class LevelSelectorView {
   ): void {
     this.levelSelect.value = level.toString();
     this.updateRounds(roundsCount, round);
+    this.levelSelect.selectedIndex = level;
+  }
+
+  public syncWithStorage(roundsCount: number): void {
+    const state = LevelService.load();
+    this.updateLevelAndRound(state.level, state.round, roundsCount);
   }
 
   private createElements(): void {

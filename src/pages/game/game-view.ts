@@ -14,12 +14,12 @@ import { loadImage, splitImageBySentences } from '../../core/utils/image-utils';
 import { LevelSelectorView } from './level-selector-view';
 import { LevelService } from '../../core/utils/level-service';
 import type { IImageFragment } from '../../core/types/types';
+import { GameController } from './game-controller';
 import { ENV } from '../../app/env';
 
 import './game.css';
 
 const SHUFFLE_COEFFICIENT = 0.5;
-const TOTAL_LEVELS = 6;
 
 export class GameView {
   private container: HTMLElement;
@@ -31,6 +31,7 @@ export class GameView {
   private puzzleButton!: PuzzleButton;
   private isImageHintActive: boolean = true;
   private levelSelector!: LevelSelectorView;
+  private gameController: GameController;
 
   private model = new SentenceCheckModel();
   private checkButton!: CheckButton;
@@ -44,6 +45,7 @@ export class GameView {
   constructor() {
     this.container = document.createElement('div');
     this.container.className = 'game-container';
+    this.gameController = new GameController(this.model);
     this.initLayout();
     this.loadGameData();
   }
@@ -74,7 +76,6 @@ export class GameView {
 
   private initLayout(): void {
     const settings = SettingsService.load();
-
     this.isImageHintActive = settings.isPuzzleEnabled;
 
     document.body.innerHTML = '';
@@ -175,32 +176,9 @@ export class GameView {
   }
 
   private async handleNextStep(): Promise<void> {
-    if (this.model.isLastSentence()) {
-      const { level, round } = LevelService.load();
-      const data = await getLevelData(level + 1);
-
-      let nextLevel = level;
-      let nextRound = round + 1;
-
-      if (nextRound >= data.rounds.length) {
-        nextLevel = (level + 1) % TOTAL_LEVELS;
-        nextRound = 0;
-      }
-
-      LevelService.save({ level: nextLevel, round: nextRound });
-
-      const nextData = await getLevelData(nextLevel + 1);
-
-      this.levelSelector.updateLevelAndRound(
-        nextLevel,
-        nextRound,
-        nextData.rounds.length,
-      );
-      await this.restartGame(nextLevel, nextRound);
-    } else {
-      this.model.next();
-      this.renderNewSentence();
-    }
+    const state = await this.gameController.nextStep();
+    await this.restartGame(state.level, state.round);
+    this.levelSelector.syncWithStorage(state.sentencesCount);
   }
 
   private async restartGame(level: number, round: number): Promise<void> {
@@ -209,10 +187,9 @@ export class GameView {
 
     const data = await getLevelData(level + 1);
     this.levelSelector.updateRounds(data.rounds.length, round);
+
     const currentRoundData = data.rounds[round] || data.rounds[0];
-
     this.model.setSentences(currentRoundData.words);
-
     this.model.resetCurrentIndex();
 
     await this.loadImageFragments(level, round);
@@ -271,7 +248,6 @@ export class GameView {
   private renderNewSentence(): void {
     const currentData = this.model.getCurrentSentence();
     if (!currentData) return;
-
     this.translationBlock.textContent = currentData.textExampleTranslate;
 
     this.audioButton.setAudio(currentData.audioExample);

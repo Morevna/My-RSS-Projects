@@ -24,22 +24,17 @@ export class CheckButton {
   }
 
   public updateStatus(): void {
-    const userWords = Array.from(this.resultBlock.children).map(
-      (el) => el.textContent?.trim() || '',
-    );
+    const userWords = Array.from(this.resultBlock.children);
+    const currentSentence = this.model.getCurrentSentence();
+    const targetWordsCount = currentSentence.textExample.split(' ').length;
 
-    if (userWords.length === 0) {
+    if (userWords.length === targetWordsCount) {
+      this.button.disabled = false;
+    } else {
       this.button.disabled = true;
       this.button.textContent = 'Check';
-      return;
+      this.button.classList.remove('continue-style');
     }
-
-    this.button.disabled = false;
-
-    const results = this.model.getCheckResults(userWords);
-    const allCorrect = results.every(Boolean);
-
-    this.button.textContent = allCorrect ? 'Continue' : 'Check';
   }
 
   private handleClick(): void {
@@ -52,34 +47,32 @@ export class CheckButton {
 
   private checkAnswer(): void {
     const userWords = Array.from(this.resultBlock.children).map(
-      (c) => c.textContent,
+      (c) => c.textContent?.trim() || '',
     );
+
     const results = this.model.getCheckResults(userWords);
     const cards = Array.from(this.resultBlock.children) as HTMLElement[];
 
     let allCorrect = true;
     results.forEach((isCorrect, index) => {
+      cards[index].classList.remove('correct', 'incorrect');
       cards[index].classList.add(isCorrect ? 'correct' : 'incorrect');
       if (!isCorrect) allCorrect = false;
     });
 
     if (allCorrect) {
-      this.button.textContent = 'Continue';
-      this.button.classList.add('continue-style');
-      this.dontKnowBtn.disabled = true;
+      this.setContinue();
     }
   }
 
   private continueToNext(): void {
-    if (this.model.next()) {
-      this.button.dispatchEvent(new CustomEvent('nextSentence'));
-    } else {
-      alert('Round Completed!');
-    }
+    this.button.dispatchEvent(
+      new CustomEvent('nextSentence', { bubbles: true }),
+    );
 
-    // Сброс на Check для след предложения
     this.button.textContent = 'Check';
     this.button.classList.remove('continue-style');
+    this.button.disabled = true;
     this.dontKnowBtn.disabled = false;
   }
 

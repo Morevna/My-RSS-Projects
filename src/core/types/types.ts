@@ -24,6 +24,12 @@ export interface ILevelData {
   roundsCount: number;
 }
 
+export interface IGameState {
+  level: number;
+  round: number;
+  sentencesCount: number;
+}
+
 export interface IImageFragment {
   sentenceIndex: number;
   word: string;
