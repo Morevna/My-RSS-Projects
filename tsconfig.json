@@ -29,7 +29,6 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
   },
   "include": ["src", "eslint.config.mjs"]
 }
