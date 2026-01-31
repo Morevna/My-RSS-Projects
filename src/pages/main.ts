@@ -9,7 +9,7 @@ export function renderMainPage(userName: string): HTMLElement {
 
   const mainContent = document.createElement('div');
   mainContent.className = 'main-content';
-  mainContent.textContent = 'Main Page / Chat area';
+  mainContent.textContent = 'Main Page';
   container.append(mainContent);
 
   return container;
