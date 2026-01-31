@@ -1,0 +1,43 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #282c34;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-user {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.header-app-name {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Общие стили для кнопок 
+будут наследоваться кнопками из других файлов
+потом перенесу в buttons.css*/
+.header-buttons button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.header-buttons button:hover {
+  background-color: #444;
+  color: #fff;
+}
