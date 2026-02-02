@@ -1,10 +1,10 @@
-import './header.css';
+import './components.css';
 import { createAboutButton } from './about-button';
 import { createLogoutButton } from './logout-button';
 
 export function createHeader(userName: string): HTMLElement {
   const header = document.createElement('header');
-  header.className = 'app-header';
+  header.className = 'header';
 
   const userElem = document.createElement('div');
   userElem.className = 'header-user';

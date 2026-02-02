@@ -1,11 +1,7 @@
-import { createHeader } from '../components/header';
-
-export function renderMainPage(userName: string): HTMLElement {
+import './styles.css';
+export function renderMainPage(): HTMLElement {
   const container = document.createElement('div');
   container.className = 'main-page';
-
-  const header = createHeader(userName);
-  container.append(header);
 
   const mainContent = document.createElement('div');
   mainContent.className = 'main-content';

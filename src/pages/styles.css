@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: var(--bg-page);
+}
+
+.main-page {
+  height: 100%;
+}
+#main-content {
+  height: 100%;
+}

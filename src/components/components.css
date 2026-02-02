@@ -1,0 +1,152 @@
+:root {
+  --primary: #4a90e2;
+  --primary-hover: #357abd;
+  --dark: #2c3e50;
+  --light: #ffffff;
+  --error: #e74c3c;
+  --bg-page: #f0f2f5;
+  --border: #dee2e6;
+  --transition: all 0.2s ease-in-out;
+}
+
+/* --- HEADER --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: 70px;
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+.header-app-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.header-user {
+  font-size: 0.9rem;
+  border-left: 3px solid var(--primary);
+  padding-left: 10px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* --- FOOTER --- */
+.footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.footer a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+}
+
+.footer img {
+  height: 30px;
+}
+
+/* --- ФОРМА ЛОГИНА --- */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 140px);
+}
+
+.login-form {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-form input {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+}
+
+.login-form input.input-error {
+  border-color: var(--error);
+  background-color: #fff2f0;
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: -10px;
+  min-height: 15px;
+}
+
+/* --- КНОПКИ --- */
+button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--primary);
+  background-color: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+  color: #525252;
+  border: 1px solid #ccc;
+  transform: none;
+}
+
+/* Специальные стили кнопок */
+.submitLoginBtn {
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+}
+
+.logout-btn {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.logout-btn:hover:not(:disabled) {
+  background-color: var(--error);
+  border-color: var(--error);
+}
+
+/* Адаптив */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+    gap: 10px;
+  }
+}
