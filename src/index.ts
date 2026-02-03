@@ -1,3 +1,4 @@
+// src/index.ts
 import { initRouter } from './core/router';
 import { socketApi } from './api/socket';
 

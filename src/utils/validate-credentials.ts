@@ -1,3 +1,4 @@
+// src/utils/validate-credentials.ts
 export function validateLogin(login: string): string | null {
   if (login.length < 3) {
     return 'Login must be at least 3 characters';

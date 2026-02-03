@@ -1,3 +1,5 @@
+// src/components/header.ts
+
 import './components.css';
 import { createAboutButton } from './about-button';
 import { createLogoutButton } from './logout-button';

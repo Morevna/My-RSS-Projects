@@ -1,3 +1,5 @@
+// src/core/router.ts
+
 import { createHeader } from '../components/header';
 import { createFooter } from '../components/footer';
 import { renderLoginPage } from '../pages/login';

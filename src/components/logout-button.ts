@@ -8,13 +8,14 @@ export function createLogoutButton(): HTMLElement {
   button.className = 'logout-btn';
 
   button.addEventListener('click', () => {
+    state.logout();
+
     if (socketApi.isConnected()) {
       socketApi.send('USER_LOGOUT', {
         user: { login: state.user, password: '' },
       });
       socketApi.disconnect();
     }
-    state.logout();
     navigate('/login');
   });
 

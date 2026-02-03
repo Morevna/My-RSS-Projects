@@ -1,3 +1,5 @@
+// src/api/types.ts
+
 export interface UserPayload {
   login: string;
   isLogined: boolean;

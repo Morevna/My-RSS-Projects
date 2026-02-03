@@ -1,7 +1,6 @@
 import { ServerResponse } from './types';
 
 const SOCKET_URL = 'ws://localhost:4000';
-export const SOCKET_EVENT = 'socket-message';
 
 type OutgoingMessage = {
   id: string;
@@ -9,10 +8,17 @@ type OutgoingMessage = {
   payload: unknown;
 };
 
+type SocketListener = (data: ServerResponse) => void;
+
 class SocketApi {
   private socket: WebSocket | null = null;
+  private listeners = new Set<SocketListener>();
 
   public connect(): Promise<void> {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      return Promise.resolve();
+    }
+
     return new Promise((resolve, reject) => {
       const socket = new WebSocket(SOCKET_URL);
       this.socket = socket;
@@ -32,7 +38,7 @@ class SocketApi {
   }
 
   public isConnected(): boolean {
-    return !!this.socket && this.socket.readyState === WebSocket.OPEN;
+    return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
   }
 
   public disconnect(): void {
@@ -42,15 +48,20 @@ class SocketApi {
     }
   }
 
+  public subscribe(listener: SocketListener): () => void {
+    this.listeners.add(listener);
+
+    return (): void => {
+      this.listeners.delete(listener);
+    };
+  }
+
   private handleMessage(event: MessageEvent<string>): void {
     try {
       const data = JSON.parse(event.data) as ServerResponse;
-
-      const customEvent = new CustomEvent<ServerResponse>(SOCKET_EVENT, {
-        detail: data,
+      this.listeners.forEach((listener) => {
+        listener(data);
       });
-
-      window.dispatchEvent(customEvent);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to parse socket message', error);
@@ -59,8 +70,6 @@ class SocketApi {
 
   public send(type: string, payload: unknown): void {
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-      // eslint-disable-next-line no-console
-      console.error('Socket is not open');
       return;
     }
 
