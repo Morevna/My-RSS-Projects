@@ -2,6 +2,7 @@
 class State {
   private currentUser: string | null = null;
   private currentPassword: string | null = null;
+  public activeChat: string | null = null;
   private isAuth = false;
   private listeners: (() => void)[] = [];
 
@@ -73,3 +74,44 @@ class State {
   }
 }
 export const state = new State();
+
+export interface MessageStatus {
+  isDelivered: boolean;
+  isReaded: boolean;
+  isEdited: boolean;
+  isDeleted?: boolean;
+}
+
+export interface Message {
+  id: string;
+  from: string;
+  to: string;
+  text: string;
+  datetime: number;
+  status: MessageStatus;
+}
+
+interface UserLoginPayload {
+  user: { login: string; password: string };
+}
+
+interface MessagePayload {
+  message: Message;
+}
+
+interface HistoryPayload {
+  messages: Message[];
+}
+
+type ServerResponse =
+  | { id: string | null; type: 'USER_LOGIN'; payload: UserLoginPayload }
+  | { id: string | null; type: 'MSG_SEND'; payload: MessagePayload }
+  | { id: string | null; type: 'MSG_FROM_USER'; payload: HistoryPayload }
+  | {
+      id: string | null;
+      type: 'MSG_READ';
+      payload: { message: { id: string } };
+    }
+  | { id: string | null; type: 'ERROR'; payload: { error: string } };
+
+export type { ServerResponse };

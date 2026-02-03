@@ -1,5 +1,6 @@
 //src/api/socket.ts
 import { ServerResponse } from './types';
+import { state } from '../core/state';
 
 const SOCKET_URL = 'ws://localhost:4000';
 
@@ -26,6 +27,11 @@ class SocketApi {
       this.socket = socket;
 
       socket.onopen = (): void => {
+        if (state.user && state.password) {
+          this.send('USER_LOGIN', {
+            user: { login: state.user, password: state.password },
+          });
+        }
         this.onOpenCallbacks.forEach((cb) => {
           cb();
         });
