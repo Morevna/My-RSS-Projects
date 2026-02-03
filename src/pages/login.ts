@@ -1,3 +1,4 @@
+// src/pages/login.ts
 import { setupLoginListeners } from '../utils/login-controller';
 import { validateLogin, validatePassword } from '../utils/validate-credentials';
 

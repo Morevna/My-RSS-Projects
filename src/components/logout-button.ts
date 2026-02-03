@@ -1,3 +1,4 @@
+// src/components/logout-button.ts
 import { navigate } from '../core/router';
 import { state } from '../core/state';
 import { socketApi } from '../api/socket';

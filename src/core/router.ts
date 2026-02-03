@@ -1,5 +1,4 @@
 // src/core/router.ts
-
 import { createHeader } from '../components/header';
 import { createFooter } from '../components/footer';
 import { renderLoginPage } from '../pages/login';
@@ -65,11 +64,17 @@ export function initRouter(): void {
     initLayout();
   }
 
-  const path = window.location.pathname;
-  const renderFunction = path in routes ? routes[path] : routes['/'];
+  const renderCurrentPath = (): void => {
+    const path = window.location.pathname;
+    const renderFunction = path in routes ? routes[path] : routes['/'];
+    if (mainLayout) {
+      mainLayout.innerHTML = '';
+      mainLayout.appendChild(renderFunction());
+    }
+  };
+  renderCurrentPath();
 
-  if (mainLayout) {
-    mainLayout.innerHTML = '';
-    mainLayout.appendChild(renderFunction());
-  }
+  window.onpopstate = (): void => {
+    renderCurrentPath();
+  };
 }

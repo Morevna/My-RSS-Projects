@@ -1,3 +1,5 @@
+// src/pages/about.ts
+import './styles.css';
 import { navigate } from '../core/router';
 
 export function renderAboutPage(): HTMLElement {

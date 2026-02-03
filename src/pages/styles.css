@@ -10,3 +10,53 @@ body {
 #main-content {
   height: 100%;
 }
+
+
+/* src/pages/about.css */
+.about-page {
+  min-height: calc(100vh - 230px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--bg-page);
+}
+
+.about-page h1 {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.about-page p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #333;
+  max-width: 500px;
+}
+
+.about-page a {
+  color: var(--primary);
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.about-page a:hover {
+  text-decoration: underline;
+}
+
+.about-page button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--primary);
+  background-color: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.about-page button:hover {
+  background-color: var(--primary-hover);
+}

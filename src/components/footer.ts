@@ -1,3 +1,4 @@
+// src/components/footer.ts
 import './components.css';
 export function createFooter(): HTMLElement {
   const footer = document.createElement('footer');

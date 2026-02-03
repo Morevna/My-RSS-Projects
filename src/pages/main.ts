@@ -1,3 +1,4 @@
+//src/pages/main.ts
 import './styles.css';
 export function renderMainPage(): HTMLElement {
   const container = document.createElement('div');

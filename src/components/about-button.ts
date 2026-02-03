@@ -1,3 +1,4 @@
+// src/components/about-button.ts
 import { navigate } from '../core/router';
 
 export function createAboutButton(): HTMLButtonElement {

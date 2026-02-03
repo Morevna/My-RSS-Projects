@@ -1,3 +1,4 @@
+//src/api/socket.ts
 import { ServerResponse } from './types';
 
 const SOCKET_URL = 'ws://localhost:4000';
