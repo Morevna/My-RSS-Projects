@@ -1,6 +1,7 @@
 // src/core/state.ts
 class State {
   private currentUser: string | null = null;
+  private currentPassword: string | null = null;
   private isAuth = false;
   private listeners: (() => void)[] = [];
 
@@ -12,12 +13,17 @@ class State {
     return this.currentUser;
   }
 
+  get password(): string | null {
+    return this.currentPassword;
+  }
+
   get authenticated(): boolean {
     return this.isAuth;
   }
 
-  setLogin(login: string): void {
+  setLogin(login: string, password: string): void {
     this.currentUser = login;
+    this.currentPassword = password;
     this.isAuth = true;
     this.saveToStorage();
     this.notify();
@@ -25,6 +31,7 @@ class State {
 
   logout(): void {
     this.currentUser = null;
+    this.currentPassword = null;
     this.isAuth = false;
     this.clearStorage();
     this.notify();
@@ -41,24 +48,28 @@ class State {
   }
 
   private saveToStorage(): void {
-    if (this.currentUser) {
-      localStorage.setItem('currentUser', this.currentUser);
-      localStorage.setItem('isAuth', 'true');
+    if (this.currentUser && this.currentPassword) {
+      sessionStorage.setItem('currentUser', this.currentUser);
+      sessionStorage.setItem('password', this.currentPassword);
+      sessionStorage.setItem('isAuth', 'true');
     }
   }
 
   private loadFromStorage(): void {
-    const user = localStorage.getItem('currentUser');
-    const auth = localStorage.getItem('isAuth') === 'true';
-    if (user && auth) {
+    const user = sessionStorage.getItem('currentUser');
+    const pass = sessionStorage.getItem('password');
+    const auth = sessionStorage.getItem('isAuth') === 'true';
+    if (user && pass && auth) {
       this.currentUser = user;
+      this.currentPassword = pass;
       this.isAuth = true;
     }
   }
 
   private clearStorage(): void {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isAuth');
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('password');
+    sessionStorage.removeItem('isAuth');
   }
 }
 export const state = new State();

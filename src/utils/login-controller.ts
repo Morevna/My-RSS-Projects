@@ -3,6 +3,7 @@ import { socketApi } from '../api/socket';
 import { state } from '../core/state';
 import { navigate } from '../core/router';
 import { ServerResponse } from '../api/types';
+import { userController } from './user-controller';
 
 function handleLoginResponse(
   response: ServerResponse,
@@ -10,15 +11,24 @@ function handleLoginResponse(
   passInp: HTMLInputElement,
   loginErr: HTMLElement,
 ): void {
-  if (response.type === 'USER_LOGIN' && response.payload.user?.isLogined) {
-    state.setLogin(response.payload.user.login);
-    loginErr.textContent = '';
-    navigate('/');
-    return;
+  if (response.type === 'USER_LOGIN') {
+    const payload = response.payload as {
+      user?: { login: string; isLogined: boolean };
+    };
+    if (payload.user?.isLogined) {
+      state.setLogin(payload.user.login, passInp.value);
+      loginErr.textContent = '';
+      userController.init(() => {
+        // eslint-disable-next-line no-console
+        console.log('Users list updated');
+      });
+      navigate('/');
+    }
   }
 
   if (response.type === 'ERROR') {
-    loginErr.textContent = response.payload.error || 'Server error';
+    const payload = response.payload as { error?: string };
+    loginErr.textContent = payload.error || 'Server error';
     loginInp.classList.add('input-error');
     passInp.classList.add('input-error');
   }

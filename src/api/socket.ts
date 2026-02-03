@@ -14,6 +14,7 @@ type SocketListener = (data: ServerResponse) => void;
 class SocketApi {
   private socket: WebSocket | null = null;
   private listeners = new Set<SocketListener>();
+  private onOpenCallbacks: (() => void)[] = [];
 
   public connect(): Promise<void> {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
@@ -25,6 +26,9 @@ class SocketApi {
       this.socket = socket;
 
       socket.onopen = (): void => {
+        this.onOpenCallbacks.forEach((cb) => {
+          cb();
+        });
         resolve();
       };
 
@@ -36,6 +40,10 @@ class SocketApi {
         this.handleMessage(event);
       };
     });
+  }
+
+  public onOpen(cb: () => void): void {
+    this.onOpenCallbacks.push(cb);
   }
 
   public isConnected(): boolean {

@@ -141,6 +141,36 @@ button:disabled {
   border-color: var(--error);
 }
 
+/* user-list */
+.user-list {
+  width: 250px;
+}
+
+.user-list-search {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.user-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-item {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.user-item:hover {
+  background-color: var(--primary-hover);
+  color: #fff;
+}
+
 /* Адаптив */
 @media (max-width: 600px) {
   .header {

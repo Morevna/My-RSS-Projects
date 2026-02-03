@@ -5,12 +5,34 @@ body {
 }
 
 .main-page {
-  height: 100%;
-}
-#main-content {
-  height: 100%;
+  display: flex;
+  height: calc(100vh - 181px);
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-page);
 }
 
+/* User list */
+.user-list {
+  width: 250px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* Chat area */
+.chat-area {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
 
 /* src/pages/about.css */
 .about-page {
