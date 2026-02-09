@@ -216,6 +216,31 @@ button:disabled {
   padding: 8px;
 }
 
+/*  */
+.unread-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #ff4747;
+  font-size: 12px;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.unread-separator::before,
+.unread-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ff4747;
+}
+
+.unread-separator:not(:empty)::before {
+  margin-right: 1em;
+}
+
+.unread-separator:not(:empty)::after {
+  margin-left: 1em;
+}
 /* Адаптив */
 @media (max-width: 600px) {
   .header {

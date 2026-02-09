@@ -16,34 +16,35 @@ export const userController = {
     this.users = [];
 
     if (!this.subscribed) {
-      socketApi.subscribe((response: ServerResponse): void => {
+      socketApi.subscribe((response: ServerResponse) => {
         this.handleSocketMessage(response, callback);
       });
       this.subscribed = true;
     }
+
     if (state.user) {
       socketApi.send('USER_ACTIVE', null);
+      socketApi.send('USER_INACTIVE', null);
     }
   },
 
   handleSocketMessage(response: ServerResponse, callback: () => void): void {
     switch (response.type) {
-      case 'USER_LOGIN':
-        socketApi.send('USER_ACTIVE', null);
-        break;
-
       case 'USER_ACTIVE':
-      case 'USER_INACTIVE':
-        this.updateUsersList(response.payload as UsersListPayload);
-        callback();
-        break;
+      case 'USER_INACTIVE': {
+        const payload = response.payload as UsersListPayload | null;
+        if (payload) {
+          this.updateUsersList(payload);
+          callback();
+        }
 
+        break;
+      }
       case 'USER_EXTERNAL_LOGIN':
       case 'USER_EXTERNAL_LOGOUT':
         this.handleExternalStatus(response);
         callback();
         break;
-
       case 'ERROR':
       default:
         break;

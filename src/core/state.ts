@@ -3,6 +3,7 @@ class State {
   private currentUser: string | null = null;
   private currentPassword: string | null = null;
   public activeChat: string | null = null;
+  public firstUnreadId: string | null = null;
   private isAuth = false;
   private listeners: (() => void)[] = [];
 
