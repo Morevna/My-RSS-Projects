@@ -18,6 +18,12 @@ export const messageController = {
         case 'MSG_READ':
           this.handleRead(response, callback);
           break;
+        case 'MSG_DELETE':
+          this.handleDelete(response, callback);
+          break;
+        case 'MSG_EDIT':
+          this.handleEdit(response, callback);
+          break;
       }
     });
   },
@@ -70,5 +76,35 @@ export const messageController = {
 
   loadHistory(login: string): void {
     socketApi.send('MSG_FROM_USER', { user: { login } });
+  },
+
+  handleDelete(response: ServerResponse, callback: () => void): void {
+    const payload = response.payload as { message: { id: string } };
+    this.messages = this.messages.filter((m) => m.id !== payload.message.id);
+    callback();
+  },
+
+  handleEdit(response: ServerResponse, callback: () => void): void {
+    const payload = response.payload as { message: Message };
+    const index = this.messages.findIndex((m) => m.id === payload.message.id);
+    if (index !== -1) {
+      this.messages[index] = payload.message;
+    }
+    callback();
+  },
+
+  deleteMessage(messageId: string): void {
+    socketApi.send('MSG_DELETE', {
+      message: { id: messageId },
+    });
+  },
+
+  editMessage(messageId: string, newText: string): void {
+    const cleanText = newText.trim();
+    if (cleanText.length > 0) {
+      socketApi.send('MSG_EDIT', {
+        message: { id: messageId, text: newText },
+      });
+    }
   },
 };

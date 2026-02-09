@@ -79,7 +79,7 @@ export const state = new State();
 export interface MessageStatus {
   isDelivered: boolean;
   isReaded: boolean;
-  isEdited: boolean;
+  isEdited?: boolean;
   isDeleted?: boolean;
 }
 

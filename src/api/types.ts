@@ -28,10 +28,7 @@ export interface Message {
   to: string;
   text: string;
   datetime: number;
-  status: {
-    isDelivered: boolean;
-    isReaded: boolean;
-  };
+  status: MessageStatus;
 }
 
 export interface MessagePayload {
