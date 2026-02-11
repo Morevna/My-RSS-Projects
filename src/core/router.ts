@@ -20,8 +20,7 @@ let lastPath = '';
 let lastAuthState = state.authenticated;
 
 function renderCurrentPath(): void {
-  const path = window.location.pathname;
-  // Если путь и статус авторизации не изменились — не перерисовываем всё окно!
+  const path = window.location.hash.slice(1) || '/';
   if (path === lastPath && state.authenticated === lastAuthState) return;
 
   lastPath = path;
@@ -42,14 +41,12 @@ function initLayout(): void {
   document.body.append(header, mainLayout, footer);
 
   state.subscribe(() => {
-    // Обновляем шапку (имя юзера)
     if (header) {
       const currentUserName = state.user || 'Guest';
       const newHeader = createHeader(currentUserName);
       document.body.replaceChild(newHeader, header);
       header = newHeader;
     }
-    // Проверяем, нужно ли сменить страницу
     renderCurrentPath();
   });
 }
@@ -60,13 +57,10 @@ export function initRouter(): void {
   }
   renderCurrentPath();
 
-  // ИСПРАВЛЕНО: добавили скобки и тип возврата для ESLint
-  window.onpopstate = (): void => {
-    renderCurrentPath();
-  };
+  window.addEventListener('hashchange', renderCurrentPath);
 }
 
 export function navigate(path: string): void {
-  window.history.pushState({}, '', path);
+  window.location.hash = path;
   renderCurrentPath();
 }

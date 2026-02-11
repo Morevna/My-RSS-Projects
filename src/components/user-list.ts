@@ -1,7 +1,7 @@
 // src/components/user-list.ts
 import './components.css';
 import { userController } from '../utils/user-controller';
-import { messageController } from '../utils/message-controller'; // ИСПРАВЛЕНО: добавили импорт
+import { messageController } from '../utils/message-controller';
 import { state } from '../core/state';
 
 export function createUserList(): HTMLElement {
@@ -24,7 +24,6 @@ export function createUserList(): HTMLElement {
       const item = document.createElement('div');
       item.className = `user-item ${state.activeChat === user.login ? 'active' : ''}`;
 
-      // Добавляем индикатор непрочитанных из userController
       const unreadCount = user.unread ?? 0;
       const unreadBadge = unreadCount > 0 ? ` [${unreadCount.toString()}]` : '';
 
@@ -32,7 +31,7 @@ export function createUserList(): HTMLElement {
 
       item.onclick = (): void => {
         state.activeChat = user.login;
-        messageController.loadHistory(user.login); // Теперь TS видит этот метод
+        messageController.loadHistory(user.login);
         renderList();
       };
 
