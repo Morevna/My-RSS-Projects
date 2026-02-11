@@ -9,53 +9,48 @@ import { state } from './state';
 type Routes = Record<string, () => HTMLElement>;
 
 const routes: Routes = {
-  '/': () => {
-    if (!state.authenticated) {
-      window.history.pushState({}, '', '/login');
-      return renderLoginPage();
-    }
-    return renderMainPage();
-  },
-  '/login': () => {
-    if (state.authenticated) {
-      window.history.pushState({}, '', '/');
-      return renderMainPage();
-    }
-    return renderLoginPage();
-  },
+  '/': () => (!state.authenticated ? renderLoginPage() : renderMainPage()),
+  '/login': () => (state.authenticated ? renderMainPage() : renderLoginPage()),
   '/about': renderAboutPage,
 };
 
-export function navigate(path: string): void {
-  window.history.pushState({}, '', path);
-  initRouter();
-}
-
 let mainLayout: HTMLElement | null = null;
 let header: HTMLElement | null = null;
+let lastPath = '';
+let lastAuthState = state.authenticated;
+
+function renderCurrentPath(): void {
+  const path = window.location.pathname;
+  // Если путь и статус авторизации не изменились — не перерисовываем всё окно!
+  if (path === lastPath && state.authenticated === lastAuthState) return;
+
+  lastPath = path;
+  lastAuthState = state.authenticated;
+
+  const renderFunction = path in routes ? routes[path] : routes['/'];
+  if (mainLayout) {
+    mainLayout.replaceChildren(renderFunction());
+  }
+}
+
 function initLayout(): void {
   header = createHeader(state.user || 'Guest');
-
   mainLayout = document.createElement('main');
   mainLayout.id = 'main-content';
-
   const footer = createFooter();
 
   document.body.append(header, mainLayout, footer);
 
   state.subscribe(() => {
+    // Обновляем шапку (имя юзера)
     if (header) {
-      const newHeader = createHeader(state.user || 'Guest');
+      const currentUserName = state.user || 'Guest';
+      const newHeader = createHeader(currentUserName);
       document.body.replaceChild(newHeader, header);
       header = newHeader;
     }
-
-    if (mainLayout) {
-      const path = window.location.pathname;
-      const renderFunction = path in routes ? routes[path] : routes['/'];
-      mainLayout.innerHTML = '';
-      mainLayout.appendChild(renderFunction());
-    }
+    // Проверяем, нужно ли сменить страницу
+    renderCurrentPath();
   });
 }
 
@@ -63,18 +58,15 @@ export function initRouter(): void {
   if (!mainLayout) {
     initLayout();
   }
-
-  const renderCurrentPath = (): void => {
-    const path = window.location.pathname;
-    const renderFunction = path in routes ? routes[path] : routes['/'];
-    if (mainLayout) {
-      mainLayout.innerHTML = '';
-      mainLayout.appendChild(renderFunction());
-    }
-  };
   renderCurrentPath();
 
+  // ИСПРАВЛЕНО: добавили скобки и тип возврата для ESLint
   window.onpopstate = (): void => {
     renderCurrentPath();
   };
+}
+
+export function navigate(path: string): void {
+  window.history.pushState({}, '', path);
+  renderCurrentPath();
 }

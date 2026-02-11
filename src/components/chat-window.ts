@@ -3,6 +3,7 @@ import './components.css';
 import { state } from '../core/state';
 import { messageController } from '../utils/message-controller';
 import { Message } from '../api/types';
+import { userController } from '../utils/user-controller';
 
 function createMessageActions(msg: Message): HTMLElement {
   const actions = document.createElement('div');
@@ -10,15 +11,13 @@ function createMessageActions(msg: Message): HTMLElement {
   const delBtn = document.createElement('button');
   delBtn.textContent = '🗑️';
   delBtn.onclick = (): void => {
-    if (confirm('Delete message?')) messageController.deleteMessage(msg.id);
+    if (confirm('Delete?')) messageController.deleteMessage(msg.id);
   };
   const editBtn = document.createElement('button');
   editBtn.textContent = '✏️';
   editBtn.onclick = (): void => {
-    const text = prompt('Edit message:', msg.text);
-    if (text && text.trim() && text.trim() !== msg.text) {
-      messageController.editMessage(msg.id, text.trim());
-    }
+    const text = prompt('Edit:', msg.text);
+    if (text?.trim()) messageController.editMessage(msg.id, text.trim());
   };
   actions.append(editBtn, delBtn);
   return actions;
@@ -27,19 +26,18 @@ function createMessageActions(msg: Message): HTMLElement {
 function createMessageElement(msg: Message, isOwn: boolean): HTMLElement {
   const msgElem = document.createElement('div');
   msgElem.className = `message-item ${isOwn ? 'own' : 'incoming'}`;
+  if (msg.status.isDeleted) msgElem.classList.add('deleted');
   const textSpan = document.createElement('span');
   textSpan.className = 'text';
-  textSpan.textContent = msg.text || '';
+  textSpan.textContent = msg.status.isDeleted ? '🗑 Message deleted' : msg.text;
   const info = document.createElement('div');
   info.className = 'message-info';
-
-  if (msg.status.isEdited) {
+  if (msg.status.isEdited && !msg.status.isDeleted) {
     const ed = document.createElement('span');
     ed.className = 'edited-label';
     ed.textContent = '(edited) ';
     info.append(ed);
   }
-
   const time = document.createElement('span');
   time.className = 'time';
   time.textContent = new Date(msg.datetime).toLocaleTimeString([], {
@@ -47,65 +45,76 @@ function createMessageElement(msg: Message, isOwn: boolean): HTMLElement {
     minute: '2-digit',
   });
   info.append(time);
-
-  if (isOwn) {
+  if (isOwn && !msg.status.isDeleted) {
     const st = document.createElement('span');
     st.className = `status ${msg.status.isReaded ? 'readed' : ''}`;
     st.textContent = msg.status.isReaded ? ' ✓✓' : ' ✓';
-    info.append(st);
-    msgElem.append(createMessageActions(msg));
+    info.append(st, createMessageActions(msg));
   }
-
   msgElem.append(textSpan, info);
   return msgElem;
 }
 
-function handleScrollAndLine(list: HTMLElement): void {
-  const separator = list.querySelector('.unread-separator');
-  if (separator) {
-    separator.scrollIntoView({ block: 'center' });
-  } else {
-    list.scrollTop = list.scrollHeight;
-  }
-  const removeSep = (): void => {
-    if (state.firstUnreadId) {
-      state.firstUnreadId = null;
-      separator?.remove();
+function renderMessageList(list: HTMLElement): void {
+  list.replaceChildren();
+  messageController.messages.forEach((msg) => {
+    if (state.firstUnreadId === msg.id) {
+      const sep = document.createElement('div');
+      sep.className = 'unread-separator';
+      sep.textContent = 'New Messages';
+      list.append(sep);
     }
-  };
-  list.addEventListener('click', removeSep, { once: true });
-  list.addEventListener('wheel', removeSep, { once: true });
+    const isOwn = msg.from === (state.user ?? '');
+    list.append(createMessageElement(msg, isOwn));
+  });
+  const separator = list.querySelector('.unread-separator');
+  if (separator) separator.scrollIntoView({ block: 'center' });
+  else list.scrollTop = list.scrollHeight;
+}
+
+function updateChatHeader(header: HTMLElement): void {
+  const user = userController.users.find((u) => u.login === state.activeChat);
+  const status = user?.isLogined ? 'online' : 'offline';
+  header.innerHTML = `<span>${state.activeChat ?? ''}</span> <small class="${status}">${status}</small>`;
 }
 
 export function createChatWindow(): HTMLElement {
   const container = document.createElement('div');
   container.className = 'chat-window';
-  if (!state.activeChat) {
-    container.innerHTML =
-      '<div class="chat-placeholder">Select a user to start chatting</div>';
-    return container;
-  }
+  const chatHeader = document.createElement('div');
+  chatHeader.className = 'chat-header';
   const messagesList = document.createElement('div');
   messagesList.className = 'messages-list';
+  const form = createMessageForm();
+  const removeSep = (): void => {
+    if (state.firstUnreadId) {
+      state.firstUnreadId = null;
+      messagesList.querySelector('.unread-separator')?.remove();
+    }
+  };
+  messagesList.onwheel = (): void => {
+    removeSep();
+  };
+  messagesList.onclick = (): void => {
+    removeSep();
+  };
   const render = (): void => {
-    messagesList.replaceChildren();
-    if (state.activeChat) messageController.markAllAsRead(state.activeChat);
-    messageController.messages.forEach((msg) => {
-      if (state.firstUnreadId === msg.id) {
-        const sep = document.createElement('div');
-        sep.className = 'unread-separator';
-        sep.textContent = 'New Messages';
-        messagesList.append(sep);
-      }
-      messagesList.append(
-        createMessageElement(msg, msg.from === (state.user ?? '')),
-      );
-    });
-    handleScrollAndLine(messagesList);
+    if (!state.activeChat) {
+      container.innerHTML = '<div class="chat-placeholder">Select a user</div>';
+      return;
+    }
+    if (!container.contains(form)) {
+      container.innerHTML = '';
+      container.append(chatHeader, messagesList, form);
+    }
+    updateChatHeader(chatHeader);
+    renderMessageList(messagesList);
   };
   messageController.init(render);
-  messageController.loadHistory(state.activeChat);
-  container.append(messagesList, createMessageForm());
+  state.subscribe((): void => {
+    render();
+  });
+  render();
   return container;
 }
 
@@ -117,12 +126,12 @@ function createMessageForm(): HTMLFormElement {
   const btn = document.createElement('button');
   btn.textContent = 'Send';
   form.append(input, btn);
-  form.onsubmit = (e): void => {
+  form.onsubmit = (e: SubmitEvent): void => {
     e.preventDefault();
-    const clean = input.value.trim();
-    if (clean.length > 0) {
-      messageController.sendMessage(clean);
+    if (input.value.trim()) {
+      messageController.sendMessage(input.value.trim());
       input.value = '';
+      state.firstUnreadId = null;
     }
   };
   return form;

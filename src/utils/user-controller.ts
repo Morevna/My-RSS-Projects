@@ -1,10 +1,5 @@
 // src/utils/user-controller.ts
-import {
-  ServerResponse,
-  UsersListPayload,
-  UserLoginPayload,
-  User,
-} from '../api/types';
+import { ServerResponse, UsersListPayload, User } from '../api/types';
 import { socketApi } from '../api/socket';
 import { state } from '../core/state';
 
@@ -13,15 +8,16 @@ export const userController = {
   subscribed: false,
 
   init(callback: () => void): void {
-    this.users = [];
-
     if (!this.subscribed) {
-      socketApi.subscribe((response: ServerResponse) => {
+      socketApi.subscribe((response: ServerResponse): void => {
         this.handleSocketMessage(response, callback);
       });
       this.subscribed = true;
     }
+    this.refresh();
+  },
 
+  refresh(): void {
     if (state.user) {
       socketApi.send('USER_ACTIVE', null);
       socketApi.send('USER_INACTIVE', null);
@@ -31,21 +27,29 @@ export const userController = {
   handleSocketMessage(response: ServerResponse, callback: () => void): void {
     switch (response.type) {
       case 'USER_ACTIVE':
-      case 'USER_INACTIVE': {
-        const payload = response.payload as UsersListPayload | null;
-        if (payload) {
-          this.updateUsersList(payload);
-          callback();
-        }
-
-        break;
-      }
-      case 'USER_EXTERNAL_LOGIN':
-      case 'USER_EXTERNAL_LOGOUT':
-        this.handleExternalStatus(response);
+      case 'USER_INACTIVE':
+        this.updateUsersList(response.payload);
         callback();
         break;
-      case 'ERROR':
+      case 'USER_EXTERNAL_LOGIN':
+      case 'USER_EXTERNAL_LOGOUT': {
+        const { user } = response.payload;
+        const found = this.users.find((u) => u.login === user.login);
+        if (found) {
+          found.isLogined = response.type === 'USER_EXTERNAL_LOGIN';
+        } else if (response.type === 'USER_EXTERNAL_LOGIN') {
+          this.users.push(user);
+        }
+        callback();
+        break;
+      }
+      case 'MSG_COUNT_NOT_READED_FROM_USER': {
+        const { count } = response.payload as { count: number };
+        if (state.activeChat) {
+          this.updateUnreadCount(state.activeChat, count, callback);
+        }
+        break;
+      }
       default:
         break;
     }
@@ -60,21 +64,16 @@ export const userController = {
         this.users.push(u);
       }
     });
-
     if (state.user) {
       this.users = this.users.filter((u) => u.login !== state.user);
     }
   },
 
-  handleExternalStatus(response: ServerResponse): void {
-    const payload = response.payload as UserLoginPayload;
-    const user = this.users.find((u) => u.login === payload.user.login);
-
-    if (response.type === 'USER_EXTERNAL_LOGIN') {
-      if (user) user.isLogined = true;
-      else this.users.push(payload.user);
-    } else if (user) {
-      user.isLogined = false;
+  updateUnreadCount(login: string, count: number, callback: () => void): void {
+    const user = this.users.find((u) => u.login === login);
+    if (user) {
+      user.unread = count;
+      callback();
     }
   },
 

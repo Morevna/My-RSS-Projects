@@ -1,7 +1,7 @@
 // src/components/user-list.ts
 import './components.css';
 import { userController } from '../utils/user-controller';
-import { User } from '../api/types';
+import { messageController } from '../utils/message-controller'; // ИСПРАВЛЕНО: добавили импорт
 import { state } from '../core/state';
 
 export function createUserList(): HTMLElement {
@@ -10,41 +10,40 @@ export function createUserList(): HTMLElement {
 
   const searchInput = document.createElement('input');
   searchInput.placeholder = 'Search user';
-  container.appendChild(searchInput);
 
   const listContainer = document.createElement('div');
-  container.appendChild(listContainer);
+  listContainer.className = 'list-container';
 
-  function renderList(): void {
-    listContainer.innerHTML = '';
-    const filtered: User[] = userController.search(searchInput.value);
+  container.append(searchInput, listContainer);
+
+  const renderList = (): void => {
+    listContainer.replaceChildren();
+    const filtered = userController.search(searchInput.value);
 
     filtered.forEach((user) => {
       const item = document.createElement('div');
-      item.className = 'user-item';
+      item.className = `user-item ${state.activeChat === user.login ? 'active' : ''}`;
 
-      if (state.activeChat === user.login) {
-        item.classList.add('active');
-      }
+      // Добавляем индикатор непрочитанных из userController
+      const unreadCount = user.unread ?? 0;
+      const unreadBadge = unreadCount > 0 ? ` [${unreadCount.toString()}]` : '';
 
-      const unread = user.unread ? `(${user.unread.toString()})` : '';
-      item.textContent = `${user.login} ${user.isLogined ? '🟢' : '⚪️'} ${unread}`;
+      item.textContent = `${user.login} ${user.isLogined ? '🟢' : '⚪️'}${unreadBadge}`;
 
-      item.addEventListener('click', () => {
+      item.onclick = (): void => {
         state.activeChat = user.login;
+        messageController.loadHistory(user.login); // Теперь TS видит этот метод
         renderList();
-        container.dispatchEvent(
-          new CustomEvent('chat-selected', { detail: user.login }),
-        );
-      });
+      };
 
       listContainer.appendChild(item);
     });
-  }
+  };
 
   userController.init(renderList);
-
-  searchInput.addEventListener('input', renderList);
+  searchInput.oninput = (): void => {
+    renderList();
+  };
 
   return container;
 }

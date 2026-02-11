@@ -1,24 +1,15 @@
-//src\api\types.ts
-// -------------------- User --------------------
+// src/api/types.ts
+
 export interface User {
   login: string;
   isLogined: boolean;
   unread?: number;
 }
 
-export interface UserLoginPayload {
-  user: User;
-}
-
-export interface UsersListPayload {
-  users: User[];
-}
-
-// -------------------- Message --------------------
 export interface MessageStatus {
-  isDelivered?: boolean;
-  isReaded?: boolean;
-  isEdited?: boolean;
+  isDelivered: boolean;
+  isReaded: boolean;
+  isEdited: boolean;
   isDeleted?: boolean;
 }
 
@@ -31,49 +22,52 @@ export interface Message {
   status: MessageStatus;
 }
 
+export interface UserPayload {
+  user: User;
+}
+export interface UsersListPayload {
+  users: User[];
+}
 export interface MessagePayload {
   message: Message;
 }
-
-export interface MessageListPayload {
+export interface MessagesHistoryPayload {
   messages: Message[];
 }
-
-export interface CountPayload {
+export interface UnreadCountPayload {
   count: number;
 }
-
 export interface ErrorPayload {
   error: string;
 }
 
-// -------------------- Server --------------------
-export type ServerEventType =
-  | 'USER_LOGIN'
-  | 'USER_LOGOUT'
-  | 'USER_ACTIVE'
-  | 'USER_INACTIVE'
-  | 'USER_EXTERNAL_LOGIN'
-  | 'USER_EXTERNAL_LOGOUT'
-  | 'MSG_SEND'
-  | 'MSG_FROM_USER'
-  | 'MSG_COUNT_NOT_READED_FROM_USER'
-  | 'MSG_DELIVER'
-  | 'MSG_READ'
-  | 'MSG_EDIT'
-  | 'MSG_DELETE'
-  | 'ERROR';
-
-export type ServerResponsePayload =
-  | UserLoginPayload
-  | UsersListPayload
-  | MessagePayload
-  | MessageListPayload
-  | CountPayload
-  | ErrorPayload;
-
-export interface ServerResponse<T = ServerResponsePayload> {
-  id: string | null;
-  type: ServerEventType;
-  payload: T;
+export interface StatusPayload {
+  message: {
+    id: string;
+    status: Partial<MessageStatus>;
+  };
 }
+
+export type ServerResponse =
+  | { id: string | null; type: 'USER_LOGIN'; payload: UserPayload }
+  | { id: string | null; type: 'USER_LOGOUT'; payload: UserPayload }
+  | { id: string | null; type: 'USER_EXTERNAL_LOGIN'; payload: UserPayload }
+  | { id: string | null; type: 'USER_EXTERNAL_LOGOUT'; payload: UserPayload }
+  | { id: string | null; type: 'USER_ACTIVE'; payload: UsersListPayload }
+  | { id: string | null; type: 'USER_INACTIVE'; payload: UsersListPayload }
+  | { id: string | null; type: 'MSG_SEND'; payload: MessagePayload }
+  | {
+      id: string | null;
+      type: 'MSG_FROM_USER';
+      payload: MessagesHistoryPayload;
+    }
+  | { id: string | null; type: 'MSG_DELIVER'; payload: StatusPayload }
+  | { id: string | null; type: 'MSG_READ'; payload: StatusPayload }
+  | { id: string | null; type: 'MSG_DELETE'; payload: StatusPayload }
+  | { id: string | null; type: 'MSG_EDIT'; payload: MessagePayload }
+  | {
+      id: string | null;
+      type: 'MSG_COUNT_NOT_READED_FROM_USER';
+      payload: UnreadCountPayload;
+    }
+  | { id: string | null; type: 'ERROR'; payload: ErrorPayload };

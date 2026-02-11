@@ -1,4 +1,4 @@
-//src/api/socket.ts
+// src/api/socket.ts
 import { ServerResponse } from './types';
 import { state } from '../core/state';
 
@@ -7,7 +7,7 @@ const SOCKET_URL = 'ws://localhost:4000';
 type OutgoingMessage = {
   id: string;
   type: string;
-  payload: unknown;
+  payload: object | null;
 };
 
 type SocketListener = (data: ServerResponse) => void;
@@ -45,6 +45,10 @@ class SocketApi {
       socket.onmessage = (event: MessageEvent<string>): void => {
         this.handleMessage(event);
       };
+
+      socket.onclose = (): void => {
+        this.socket = null;
+      };
     });
   }
 
@@ -65,7 +69,6 @@ class SocketApi {
 
   public subscribe(listener: SocketListener): () => void {
     this.listeners.add(listener);
-
     return (): void => {
       this.listeners.delete(listener);
     };
@@ -83,18 +86,21 @@ class SocketApi {
     }
   }
 
-  public send(type: string, payload: unknown): void {
+  public send(type: string, payload: object | null): string {
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-      return;
+      return '';
     }
 
+    const id = `${Date.now().toString()}_${Math.random().toString(36).substring(2, 9)}`;
+
     const message: OutgoingMessage = {
-      id: Date.now().toString(),
+      id,
       type,
       payload,
     };
 
     this.socket.send(JSON.stringify(message));
+    return id;
   }
 }
 

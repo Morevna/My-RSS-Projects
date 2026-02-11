@@ -1,4 +1,4 @@
-//src/pages/main.ts
+// src/pages/main.ts
 import './styles.css';
 import { createUserList } from '../components/user-list';
 import { createChatWindow } from '../components/chat-window';
@@ -8,15 +8,13 @@ export function renderMainPage(): HTMLElement {
   container.className = 'main-page';
 
   const userList = createUserList();
-  const contentArea = document.createElement('main');
-  contentArea.className = 'chat-container-area';
+  const chatArea = document.createElement('div');
+  chatArea.className = 'chat-container-area';
 
-  contentArea.append(createChatWindow());
+  chatArea.append(createChatWindow());
 
-  userList.addEventListener('chat-selected', (() => {
-    contentArea.replaceChildren(createChatWindow());
-  }) as EventListener);
+  userList.addEventListener('chat-selected', () => {});
 
-  container.append(userList, contentArea);
+  container.append(userList, chatArea);
   return container;
 }
