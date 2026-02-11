@@ -88,6 +88,7 @@ export const messageController = {
   },
 
   loadHistory(login: string): void {
+    this.messages = [];
     socketApi.send('MSG_FROM_USER', { user: { login } });
   },
 

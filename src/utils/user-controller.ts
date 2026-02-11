@@ -1,4 +1,4 @@
-// src/utils/user-controller.ts
+// src\utils\user-controller.ts
 import { ServerResponse, UsersListPayload, User } from '../api/types';
 import { socketApi } from '../api/socket';
 import { state } from '../core/state';
@@ -14,7 +14,13 @@ export const userController = {
       });
       this.subscribed = true;
     }
-    this.refresh();
+    if (socketApi.isConnected()) {
+      this.refresh();
+    } else {
+      socketApi.onOpen(() => {
+        this.refresh();
+      });
+    }
   },
 
   refresh(): void {
@@ -44,9 +50,9 @@ export const userController = {
         break;
       }
       case 'MSG_COUNT_NOT_READED_FROM_USER': {
-        const { count } = response.payload as { count: number };
+        const payload = response.payload;
         if (state.activeChat) {
-          this.updateUnreadCount(state.activeChat, count, callback);
+          this.updateUnreadCount(state.activeChat, payload.count, callback);
         }
         break;
       }

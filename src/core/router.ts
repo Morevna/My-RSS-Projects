@@ -41,13 +41,15 @@ function initLayout(): void {
   document.body.append(header, mainLayout, footer);
 
   state.subscribe(() => {
-    if (header) {
-      const currentUserName = state.user || 'Guest';
-      const newHeader = createHeader(currentUserName);
-      document.body.replaceChild(newHeader, header);
-      header = newHeader;
+    if (state.authenticated !== lastAuthState) {
+      if (header) {
+        const currentUserName = state.user || 'Guest';
+        const newHeader = createHeader(currentUserName);
+        document.body.replaceChild(newHeader, header);
+        header = newHeader;
+      }
+      renderCurrentPath();
     }
-    renderCurrentPath();
   });
 }
 
